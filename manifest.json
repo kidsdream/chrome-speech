@@ -5,12 +5,6 @@
   "name": "koe-koe読み上げ",
   "version": "1.0",
   "description": "koe-koe配信サイト読み上げツール",
-  "content_scripts": [
-  {
-    "matches": ["*://*.koe-koe.com/*"],
-    "js": ["script.js"]
-  }
-],
   "icons": {
     "16": "icon_16x16.png",
     "48": "icon_48x48.png",

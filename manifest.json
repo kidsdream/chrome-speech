@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "permissions": ["tabs", "scripting", "declarativeContent"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "name": "koe-koe読み上げ",
+  "version": "1.0",
+  "description": "koe-koe配信サイト読み上げツール",
+  "content_scripts": [
+  {
+    "matches": ["*://*.koe-koe.com/*"],
+    "js": ["script.js"]
+  }
+],
+  "icons": {
+    "16": "icon_16x16.png",
+    "48": "icon_48x48.png",
+    "128": "icon_128x128.png"
+},
+  "action": {
+    "default_title": "koe-koe配信サイト読み上げツール",
+    "default_icon": "icon_48x48.png",
+    "default_popup": "main.html"
+  }
+}

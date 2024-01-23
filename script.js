@@ -30,6 +30,23 @@ speechSynthesis.addEventListener('voiceschanged', e => {
   isStarted = true
 });
 
+function sleep(waitMsec) {
+  var startMsec = new Date();
+  // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
+  while (new Date() - startMsec < waitMsec);
+}
+
+async function callVoicevoxApi(text, voiceId) {
+  console.log('送信テキスト' + text)
+  const res = await fetch(`https://api.tts.quest/v3/voicevox/synthesis?speaker=${voiceId}&text=${text}&key=e_A02-5-6810980`);
+  const json = await res.json()
+  console.log(json.mp3DownloadUrl)
+  sleep(4000)
+  const music = new Audio();
+  music.src = json.mp3DownloadUrl
+  music.volume = 0.07;
+  music.play();
+};
 
 //MutationObserver（インスタンス）の作成
 var mo = new MutationObserver(function () {
@@ -68,6 +85,24 @@ var mo = new MutationObserver(function () {
     }
   })
   if (isNotRead == true) { return }
+
+  // VOICEVOX機能
+  if (text.indexOf('ずんだもん') !== -1) {
+    callVoicevoxApi(text, 3)
+    return
+  }
+  if (text.indexOf('四国めたん') !== -1) {
+    callVoicevoxApi(text, 2)
+    return
+  }
+  if (text.indexOf('春日部つむぎ') !== -1) {
+    callVoicevoxApi(text, 8)
+    return
+  }
+  if (text.indexOf('波音リツ') !== -1) {
+    callVoicevoxApi(text, 9)
+    return
+  }
 
   // 早口
   if (text.indexOf('早口') !== -1) {

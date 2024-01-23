@@ -14,13 +14,6 @@ const date2 = (date1.getMonth() + 1) + "月" + date1.getDate() + "日" + date1.g
 let userIdArray = [];
 
 let isStarted = false
-// 枠開始時用設定
-const music = new Audio();
-music.src = "https://bgmer.net/wp-content/uploads/2023/01/M19_MusicBox_long_BPM78-55.mp3"
-music.volume = 0.1
-music.loop = true
-music.play()
-
 const uttr = new SpeechSynthesisUtterance()
 uttr.text = '配信を開始しました。' + date2 + 'からの配信です。'
 uttr.volume = 0.03
@@ -138,11 +131,6 @@ let player = 0
 // 「～名様いらっしゃい」用のボイス
 //MutationObserver（インスタンス）の作成
 var mo_player = new MutationObserver(function () {
-
-  // 人がいるときのみ配信終了時刻の監視をする
-  element_timer = document.querySelector('#timer p span')
-  mo_timer.observe(element_timer, config);
-
   /* 変更検出時に実行する内容 */
   // エラーチェック
   if (document.querySelector('#room_prop .prop_block p span').innerHTML.substring(0, 1) == undefined || 0) {
@@ -182,19 +170,67 @@ var mo_star = new MutationObserver(function () {
   if (star < document.querySelector('#room_prop .prop_block:last-of-type span').innerHTML) {
     const music = new Audio();
     music.src = "https://soundeffect-lab.info/sound/anime/mp3/pa1.mp3"
-    music.volume = 0.3;
+    music.volume = 0.2;
     music.play();
   }
   star = document.querySelector('#room_prop .prop_block:last-of-type span').innerHTML
 })
 
+let isBGM = false
+let isEnd = false
+let isEnding = false
 let isVoiced = false
-// 「配信終了3分前です」
+const bgm = new Audio();
+// タイマー検知
 //MutationObserver（インスタンス）の作成
 var mo_timer = new MutationObserver(function () {
+  if (!isBGM) {
+    // 枠開始時用設定
+    // 枠の自動選曲機能
+    if (date1.getHours() >= 9 && date1.getHours() <= 11) {
+      bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/209_long_BPM80.mp3"
+      bgm.volume = 0.03
+    } else if(date1.getHours() >= 12 && date1.getHours() <= 15) {
+      bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/212_long_BPM132.mp3"
+      bgm.volume = 0.02
+    } else if(date1.getHours() >= 19 && date1.getHours() <= 22) {
+      bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/296_long_BPM85.mp3"
+      bgm.volume = 0.03
+    } else {
+      bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M19_MusicBox_long_BPM78-55.mp3"
+      bgm.volume = 0.1
+    }
+    bgm.loop = true
+    bgm.play()
+    isBGM = true
+  } else if (isEnd) {
+    // BGMフェードアウト
+    let timerid = setInterval( ()=>{
+      // ボリュームが0になったら終了
+      if(bgm.volume <= 0.001){
+        bgm.volume = 0;
+        bgm.pause();
+        clearInterval(timerid);  //タイマー解除
+        if (isEnding) { return }
+        // エンディングソング
+        const music = new Audio();
+        music.src = "https://bgmer.net/wp-content/uploads/2021/12/206_long_BPM172.mp3"
+        music.volume = 0.06
+        music.loop = true
+        music.play()
+        isEnding = true
+      }
+      // 0.1ずつボリュームを減らしていく
+      else{
+        bgm.volume -= 0.001;
+      }
+    }
+    , 100); //0.1秒ごとに繰り返す
+  }
+
   /* 変更検出時に実行する内容 */
   const text = document.querySelector('#timer p span').innerHTML.substring(0, 8)
-  // 配信終了3分前の場合
+  // 「配信終了3分前です」の音声発言
   if (text == "00:57:00") {
     if (isVoiced) { return }
     isVoiced = true
@@ -203,7 +239,7 @@ var mo_timer = new MutationObserver(function () {
       // 発言を設定
       const uttr = new SpeechSynthesisUtterance()
       uttr.text = "配信終了3分前です。"
-      uttr.volume = 0.03
+      uttr.volume = 0.02
       var voices = speechSynthesis.getVoices();
       voices.forEach(function(v, i){
         if(v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
@@ -213,6 +249,7 @@ var mo_timer = new MutationObserver(function () {
     } else {
       alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
     }
+    isEnd = true
   }
 })
 
@@ -227,5 +264,4 @@ var config = {
 mo.observe(element, config);
 mo_player.observe(element_player, config);
 mo_star.observe(element_star, config);
-
-
+mo_timer.observe(element_timer, config);

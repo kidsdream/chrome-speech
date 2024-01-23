@@ -50,6 +50,15 @@ var mo = new MutationObserver(function () {
   // トリップ削除
   let text = getText.replace(/◆.*:/, '')
 
+  // 「読み上げ再開」が含まれていた場合、再び読み上げられないようにする。
+  if (text.indexOf('読み上げ再開') !== -1 || text.indexOf('読上げ再開') !== -1 || text.indexOf('読上再開') !== -1) {
+    // 読み上げ再開の人のUserIDを取得して配列から削除する
+    userIdArray = userIdArray.filter(function(userId) {
+      return userId !== document.querySelector('.column input').value;
+    });
+    console.log('読み上げ再開：' + document.querySelector('.column input').value)
+    return
+  }
   // 「読み上げ不要」が含まれていた場合読み上げられないようにする。
   if (text.indexOf('読み上げ不要') !== -1 || text.indexOf('読上げ不要') !== -1 || text.indexOf('読上不要') !== -1) {
     // 読み上げ不要の人のUserIDを取得して登録する
@@ -81,6 +90,7 @@ var mo = new MutationObserver(function () {
       });
       // 発言を再生
       window.speechSynthesis.speak(uttr)
+      return
     } else {
       alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
     }
@@ -100,6 +110,7 @@ var mo = new MutationObserver(function () {
       });
       // 発言を再生
       window.speechSynthesis.speak(uttr)
+      return
     } else {
       alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
     }
@@ -131,8 +142,6 @@ var mo_player = new MutationObserver(function () {
   // 人がいるときのみ配信終了時刻の監視をする
   element_timer = document.querySelector('#timer p span')
   mo_timer.observe(element_timer, config);
-
-
 
   /* 変更検出時に実行する内容 */
   // エラーチェック

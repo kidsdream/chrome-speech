@@ -75,7 +75,7 @@ var mo = new MutationObserver(function () {
       // 発言を設定
       const uttr = new SpeechSynthesisUtterance()
       uttr.text = text
-      uttr.volume = 0.03
+      uttr.volume = 0.025
       uttr.rate = 2
       var voices = speechSynthesis.getVoices();
       voices.forEach(function(v, i){
@@ -95,7 +95,7 @@ var mo = new MutationObserver(function () {
       // 発言を設定
       const uttr = new SpeechSynthesisUtterance()
       uttr.text = text
-      uttr.volume = 0.03
+      uttr.volume = 0.025
       uttr.rate = 0.5
       var voices = speechSynthesis.getVoices();
       voices.forEach(function(v, i){
@@ -114,7 +114,7 @@ var mo = new MutationObserver(function () {
     // 発言を設定
     const uttr = new SpeechSynthesisUtterance()
     uttr.text = text
-    uttr.volume = 0.03
+    uttr.volume = 0.025
     var voices = speechSynthesis.getVoices();
     voices.forEach(function(v, i){
       if(v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
@@ -143,7 +143,7 @@ var mo_player = new MutationObserver(function () {
       // 発言を設定
       const uttr = new SpeechSynthesisUtterance()
       uttr.text = text + '名様いらっしゃい。'
-      uttr.volume = 0.03
+      uttr.volume = 0.025
       var voices = speechSynthesis.getVoices();
       voices.forEach(function(v, i){
         if(v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
@@ -189,16 +189,16 @@ var mo_timer = new MutationObserver(function () {
     // 枠の自動選曲機能
     if (date1.getHours() >= 9 && date1.getHours() <= 11) {
       bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/209_long_BPM80.mp3"
-      bgm.volume = 0.03
-    } else if(date1.getHours() >= 12 && date1.getHours() <= 15) {
-      bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/212_long_BPM132.mp3"
       bgm.volume = 0.02
+    } else if(date1.getHours() >= 12 && date1.getHours() <= 18) {
+      bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/212_long_BPM132.mp3"
+      bgm.volume = 0.01
     } else if(date1.getHours() >= 19 && date1.getHours() <= 22) {
       bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/296_long_BPM85.mp3"
-      bgm.volume = 0.03
+      bgm.volume = 0.02
     } else {
       bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M19_MusicBox_long_BPM78-55.mp3"
-      bgm.volume = 0.1
+      bgm.volume = 0.09
     }
     bgm.loop = true
     bgm.play()
@@ -215,7 +215,7 @@ var mo_timer = new MutationObserver(function () {
         // エンディングソング
         const music = new Audio();
         music.src = "https://bgmer.net/wp-content/uploads/2021/12/206_long_BPM172.mp3"
-        music.volume = 0.06
+        music.volume = 0.045
         music.loop = true
         music.play()
         isEnding = true

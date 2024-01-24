@@ -225,10 +225,10 @@ var mo_timer = new MutationObserver(function () {
     if (date1.getHours() >= 9 && date1.getHours() <= 11) {
       bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/209_long_BPM80.mp3"
       bgm.volume = 0.015
-    } else if(date1.getHours() >= 12 && date1.getHours() <= 18) {
+    } else if(date1.getHours() >= 12 && date1.getHours() <= 17) {
       bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/212_long_BPM132.mp3"
       bgm.volume = 0.01
-    } else if(date1.getHours() >= 19 && date1.getHours() <= 22) {
+    } else if(date1.getHours() >= 18 && date1.getHours() <= 22) {
       bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/296_long_BPM85.mp3"
       bgm.volume = 0.02
     } else {

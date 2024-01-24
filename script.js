@@ -243,7 +243,7 @@ var mo_timer = new MutationObserver(function () {
     } else if(date1.getHours() >= 12 && date1.getHours() <= 17) {
       bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/212_long_BPM132.mp3"
       bgm.volume = 0.01
-    } else if(date1.getHours() >= 18 && date1.getHours() <= 22) {
+    } else if(date1.getHours() >= 18 && date1.getHours() <= 21) {
       bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/296_long_BPM85.mp3"
       bgm.volume = 0.02
     } else {
@@ -265,7 +265,7 @@ var mo_timer = new MutationObserver(function () {
         // エンディングソング
         const music = new Audio();
         music.src = "https://bgmer.net/wp-content/uploads/2021/12/206_long_BPM172.mp3"
-        music.volume = 0.045
+        music.volume = 0.04
         music.loop = true
         music.play()
         isEnding = true

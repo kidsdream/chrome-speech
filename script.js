@@ -38,14 +38,30 @@ function sleep(waitMsec) {
 
 async function callVoicevoxApi(text, voiceId) {
   console.log('送信テキスト' + text)
-  const res = await fetch(`https://api.tts.quest/v3/voicevox/synthesis?speaker=${voiceId}&text=${text}&key=e_A02-5-6810980`);
+  const res = await fetch(`https://api.tts.quest/v3/voicevox/synthesis?speaker=${voiceId}&text=${text}&key=e_A02-5-6810980`)
   const json = await res.json()
   console.log(json.mp3DownloadUrl)
-  sleep(4000)
-  const music = new Audio();
-  music.src = json.mp3DownloadUrl
-  music.volume = 0.05;
-  music.play();
+  let retryCount = 0
+  // 1秒ごとに読み込んでもエラーが出なくなったら再生する。
+  let timerid = setInterval( async ()=>{
+    const status = await fetch(json.audioStatusUrl)
+    const jsonStatus = await status.json()
+    console.log(jsonStatus.isAudioReady)
+    // 正常に読み込めた場合
+    if(jsonStatus.isAudioReady) {
+      const music = new Audio()
+      music.src = json.mp3DownloadUrl
+      music.volume = 0.05
+      music.play()
+      clearInterval(timerid)
+    }
+    retryCount++
+    if (retryCount >= 10) {
+      console.error("リトライ回数が10回を超えたため、処理を中止します");
+      clearInterval(timerid);
+    }
+  }
+  , 1000); //1秒ごとに繰り返す
 };
 
 //MutationObserver（インスタンス）の作成
@@ -86,7 +102,7 @@ var mo = new MutationObserver(function () {
   if (isNotRead == true) { return }
 
   // VOICEVOX機能
-  if (text.indexOf('ずんだもん') !== -1) {
+  if (text.indexOf(':') !== -1) {
     callVoicevoxApi(text, 3)
     return
   }

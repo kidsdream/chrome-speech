@@ -44,7 +44,7 @@ async function callVoicevoxApi(text, voiceId) {
   sleep(4000)
   const music = new Audio();
   music.src = json.mp3DownloadUrl
-  music.volume = 0.07;
+  music.volume = 0.05;
   music.play();
 };
 
@@ -105,7 +105,7 @@ var mo = new MutationObserver(function () {
   }
 
   // 早口
-  if (text.indexOf('早口') !== -1) {
+  if (text.indexOf('早口') !== -1 || text.indexOf('はやくち') !== -1) {
       if ('speechSynthesis' in window) {
       // 発言を設定
       const uttr = new SpeechSynthesisUtterance()
@@ -224,7 +224,7 @@ var mo_timer = new MutationObserver(function () {
     // 枠の自動選曲機能
     if (date1.getHours() >= 9 && date1.getHours() <= 11) {
       bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/209_long_BPM80.mp3"
-      bgm.volume = 0.02
+      bgm.volume = 0.015
     } else if(date1.getHours() >= 12 && date1.getHours() <= 18) {
       bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/212_long_BPM132.mp3"
       bgm.volume = 0.01

@@ -67,7 +67,6 @@ var mo = new MutationObserver(function () {
       return userId !== document.querySelector('.column input').value;
     });
     console.log('読み上げ再開：' + document.querySelector('.column input').value)
-    return
   }
   // 「読み上げ不要」が含まれていた場合読み上げられないようにする。
   if (text.indexOf('読み上げ不要') !== -1 || text.indexOf('読上げ不要') !== -1 || text.indexOf('読上不要') !== -1) {

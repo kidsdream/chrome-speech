@@ -102,7 +102,7 @@ var mo = new MutationObserver(function () {
   if (isNotRead == true) { return }
 
   // VOICEVOX機能
-  if (text.indexOf(':') !== -1) {
+  if (text.indexOf('ずんだもん') !== -1) {
     callVoicevoxApi(text, 3)
     return
   }
@@ -220,7 +220,7 @@ var mo_star = new MutationObserver(function () {
   if (star < document.querySelector('#room_prop .prop_block:last-of-type span').innerHTML) {
     const music = new Audio();
     music.src = "https://soundeffect-lab.info/sound/anime/mp3/pa1.mp3"
-    music.volume = 0.2;
+    music.volume = 0.1;
     music.play();
   }
   star = document.querySelector('#room_prop .prop_block:last-of-type span').innerHTML
@@ -248,7 +248,7 @@ var mo_timer = new MutationObserver(function () {
       bgm.volume = 0.02
     } else {
       bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M19_MusicBox_long_BPM78-55.mp3"
-      bgm.volume = 0.09
+      bgm.volume = 0.07
     }
     bgm.loop = true
     bgm.play()

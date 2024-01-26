@@ -12,7 +12,11 @@ const date1 = new Date();
 const date2 = (date1.getMonth() + 1) + "月" + date1.getDate() + "日" + date1.getHours() + "時" + date1.getMinutes() + "分"
 
 let userIdArray = ['42471cc839'];
+let voiceArray = [];
 
+// *********
+// 配信開始時の設定情報
+// *********
 let isStarted = false
 const uttr = new SpeechSynthesisUtterance()
 uttr.text = '配信を開始しました。' + date2 + 'からの配信です。'
@@ -25,18 +29,59 @@ speechSynthesis.addEventListener('voiceschanged', e => {
   });
   // 発言を再生
   if (!isStarted) {
+    console.log(uttr.text)
     window.speechSynthesis.speak(uttr);
   }
   isStarted = true
 });
 
+// *********
+// Utils関数
+// *********
+
+// JavaScriptの処理を指定ミリ秒中断させる
 function sleep(waitMsec) {
   var startMsec = new Date();
   // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
   while (new Date() - startMsec < waitMsec);
 }
 
-let isPlayVoicevox = false
+// 読み上げ内容を連想配列に設定する
+function setVoice(isDefault, text, rate, voicevoxId = '') {
+  isVoice = true
+  if (!isDefault) {
+    callVoicevoxApi(text, voicevoxId)
+    return
+  }
+    defaultPlay(text, rate)
+}
+
+// デフォルトの読み上げちゃんで読み上げさせる
+function defaultPlay(text, rate) {
+  if ('speechSynthesis' in window) {
+    // 発言を設定
+    const uttr = new SpeechSynthesisUtterance()
+    uttr.text = text
+    uttr.volume = 0.025
+    uttr.rate = rate
+    var voices = speechSynthesis.getVoices();
+    voices.forEach(function (v, i) {
+      if (v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
+    });
+    // 発言を再生
+    window.speechSynthesis.speak(uttr)
+    // 話し終わった場合
+    uttr.onend = function () {
+      isVoice = false
+    }
+    return
+  } else {
+    alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
+  }
+}
+
+let isVoice = false
+// VOICEVOXを使用して読み上げさせる
 async function callVoicevoxApi(text, voiceId) {
   console.log('送信テキスト' + text)
   const res = await fetch(`https://api.tts.quest/v3/voicevox/synthesis?speaker=${voiceId}&text=${text}&key=e_A02-5-6810980`)
@@ -44,7 +89,7 @@ async function callVoicevoxApi(text, voiceId) {
   console.log(json.mp3DownloadUrl)
   let retryCount = 0
   // 1秒ごとに読み込んでもエラーが出なくなったら再生する。
-  let timerid = setInterval( async ()=>{
+  let timerid = setInterval(async () => {
     const status = await fetch(json.audioStatusUrl)
     const jsonStatus = await status.json()
     console.log(jsonStatus.isAudioReady)
@@ -53,37 +98,11 @@ async function callVoicevoxApi(text, voiceId) {
       const music = new Audio()
       music.src = json.mp3DownloadUrl
       music.volume = 0.05
-      let retryWaitCount = 0
-      // すでに発声中の場合は、しばらく待機してから発声する
-      let waitTimerid = setInterval( async ()=>{
-        console.log('isPlayVoicevox:' + isPlayVoicevox)
-        console.log('speaking' + window.speechSynthesis.speaking)
-        if(window.speechSynthesis.speaking) {
-          window.speechSynthesis.paused
-        }
-        // TODO: うーむ、speakingがONになったままなんだよなぁ
-        // 他に誰も発声していない場合
-        if (!isPlayVoicevox && !window.speechSynthesis.speaking) {
-          isPlayVoicevox = true
-          music.play()
-          music.addEventListener("ended", (event) => {
-            console.log('VOICEVOX再生完了')
-            isPlayVoicevox = false
-            // その間に読まれなかった読み上げを一気に読み上げる。
-            while(window.speechSynthesis.paused) {
-              window.speechSynthesis.speaking
-            }
-          });
-          clearInterval(waitTimerid)
-        }
-        retryWaitCount++
-        if (retryWaitCount >= 30) {
-          console.error("音声開始待ちのリトライ回数が30回を超えたため、処理を中止します");
-          isPlayVoicevox = false
-          clearInterval(waitTimerid);
-          return
-        }
-      }, 1000); //1秒ごとに繰り返す
+      music.play()
+        music.addEventListener("ended", (event) => {
+          console.log('VOICEVOX再生完了')
+          isVoice = false
+        });
       clearInterval(timerid)
     }
     retryCount++
@@ -134,95 +153,36 @@ var mo = new MutationObserver(function () {
 
   // VOICEVOX機能
   if (text.indexOf(':') !== -1) {
-    callVoicevoxApi(text, 3)
+    voiceArray.push([false, text, 1, 3])
     return
   }
   if (text.indexOf('四国めたん') !== -1) {
-    callVoicevoxApi(text, 2)
+    voiceArray.push([false, text, 1, 2])
     return
   }
   if (text.indexOf('春日部つむぎ') !== -1) {
-    callVoicevoxApi(text, 8)
+    voiceArray.push([false, text, 1, 8])
     return
   }
   if (text.indexOf('波音リツ') !== -1) {
-    callVoicevoxApi(text, 9)
+    voiceArray.push([false, text, 1, 9])
     return
   }
 
   // 早口
   if (text.indexOf('早口') !== -1 || text.indexOf('はやくち') !== -1) {
-    if ('speechSynthesis' in window) {
-      // 発言を設定
-      const uttr = new SpeechSynthesisUtterance()
-      uttr.text = text
-      uttr.volume = 0.025
-      uttr.rate = 2
-      var voices = speechSynthesis.getVoices();
-      voices.forEach(function (v, i) {
-        if (v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
-      });
-      // 発言を再生
-      window.speechSynthesis.speak(uttr)
-      // 他に誰も発生していない場合
-      if (isPlayVoicevox) {
-        window.speechSynthesis.pause(uttr)
-      }
-      return
-    } else {
-      alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
-    }
+    voiceArray.push([true, text, 2, ''])
   }
-
   // ゆっくり
   if (text.indexOf('ゆっくり') !== -1) {
-      if ('speechSynthesis' in window) {
-      // 発言を設定
-      const uttr = new SpeechSynthesisUtterance()
-      uttr.text = text
-      uttr.volume = 0.025
-      uttr.rate = 0.5
-      var voices = speechSynthesis.getVoices();
-      voices.forEach(function(v, i){
-        if(v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
-      });
-      // 発言を再生
-      window.speechSynthesis.speak(uttr)
-      // 他に誰も発生していない場合
-      if (isPlayVoicevox) {
-        window.speechSynthesis.pause(uttr)
-      }
-      return
-    } else {
-      alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
-    }
+    voiceArray.push([true, text, 0.5, ''])
   }
-
-  // ブラウザにWeb Speech API Speech Synthesis機能があるか判定
-  if ('speechSynthesis' in window) {
-    // 発言を設定
-    const uttr = new SpeechSynthesisUtterance()
-    uttr.text = text
-    uttr.volume = 0.025
-    var voices = speechSynthesis.getVoices();
-    voices.forEach(function(v, i){
-      if(v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
-    });
-    // 発言を再生
-    window.speechSynthesis.speak(uttr)
-    // 他に誰も発生していない場合
-    if (isPlayVoicevox) {
-      window.speechSynthesis.pause(uttr)
-    }
-  } else {
-    alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
-  }
+  voiceArray.push([true, text, 1, ''])
 })
 
 let player = 0
 
 // 「～名様いらっしゃい」用のボイス
-//MutationObserver（インスタンス）の作成
 var mo_player = new MutationObserver(function () {
   /* 変更検出時に実行する内容 */
   // エラーチェック
@@ -230,26 +190,9 @@ var mo_player = new MutationObserver(function () {
     return
   }
   const text = document.querySelector('#room_prop .prop_block p span').innerHTML.substring(0, 2)
+  // if (Number(text) > 5) { return }
   if (player < Number(text)) {
-    // ブラウザにWeb Speech API Speech Synthesis機能があるか判定
-    if ('speechSynthesis' in window) {
-      // 発言を設定
-      const uttr = new SpeechSynthesisUtterance()
-      uttr.text = text + '名様いらっしゃい。'
-      uttr.volume = 0.025
-      var voices = speechSynthesis.getVoices();
-      voices.forEach(function(v, i){
-        if(v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
-      });
-      // 発言を再生
-      window.speechSynthesis.speak(uttr)
-      // 他に誰も発生していない場合
-      if (isPlayVoicevox) {
-        window.speechSynthesis.pause(uttr)
-      }
-    } else {
-      alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
-    }
+    voiceArray.push([true, `${text}名様いらっしゃい`, 1, ''])
   }
   player = Number(text)
 })
@@ -267,7 +210,7 @@ var mo_star = new MutationObserver(function () {
   if (star < document.querySelector('#room_prop .prop_block:last-of-type span').innerHTML) {
     const music = new Audio();
     music.src = "https://soundeffect-lab.info/sound/anime/mp3/pa1.mp3"
-    music.volume = 0.1;
+    music.volume = 0.09;
     music.play();
   }
   star = document.querySelector('#room_prop .prop_block:last-of-type span').innerHTML
@@ -276,7 +219,7 @@ var mo_star = new MutationObserver(function () {
 let isBGM = false
 let isEnd = false
 let isEnding = false
-let isVoiced = false
+let isEindingVoice = false
 const bgm = new Audio();
 // タイマー検知
 //MutationObserver（インスタンス）の作成
@@ -301,6 +244,7 @@ var mo_timer = new MutationObserver(function () {
     bgm.play()
     isBGM = true
   } else if (isEnd) {
+    console.log('まもなく配信終了となります。')
     // BGMフェードアウト
     let timerid = setInterval( ()=>{
       // ボリュームが0になったら終了
@@ -312,7 +256,7 @@ var mo_timer = new MutationObserver(function () {
         // エンディングソング
         const music = new Audio();
         music.src = "https://bgmer.net/wp-content/uploads/2021/12/206_long_BPM172.mp3"
-        music.volume = 0.04
+        music.volume = 0.035
         music.loop = true
         music.play()
         isEnding = true
@@ -329,32 +273,16 @@ var mo_timer = new MutationObserver(function () {
   const text = document.querySelector('#timer p span').innerHTML.substring(0, 8)
   // 「配信終了3分前です」の音声発言
   if (text == "00:57:00") {
-    if (isVoiced) { return }
-    isVoiced = true
-    // ブラウザにWeb Speech API Speech Synthesis機能があるか判定
-    if ('speechSynthesis' in window) {
-      // 発言を設定
-      const uttr = new SpeechSynthesisUtterance()
-      uttr.text = "配信終了3分前です。"
-      uttr.volume = 0.02
-      var voices = speechSynthesis.getVoices();
-      voices.forEach(function(v, i){
-        if(v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
-      });
-      // 発言を再生
-      window.speechSynthesis.speak(uttr)
-      // 他に誰も発生していない場合
-      if (isPlayVoicevox) {
-        window.speechSynthesis.pause(uttr)
-      }
-    } else {
-      alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
-    }
+    if (isEindingVoice) { return }
+    isEindingVoice = true
+    voiceArray.push([true, text, 1, ''])
     isEnd = true
   }
 })
 
-
+// *********
+// 監視情報を設定
+// *********
 //監視する「もの」の指定（必ず1つ以上trueにする）
 var config = {
   childList: true,//「子ノード（テキストノードも含む）」の変化
@@ -366,3 +294,18 @@ mo.observe(element, config);
 mo_player.observe(element_player, config);
 mo_star.observe(element_star, config);
 mo_timer.observe(element_timer, config);
+
+// 読み上げ内容があるかどうか1秒ごとに監視
+let timerid = setInterval(async () => {
+  if (isVoice) { return }
+  // Voice配列にデータが存在する場合
+  if (voiceArray.length > 0) {
+    const isDefault = voiceArray[0][0]
+    const text = voiceArray[0][1]
+    const rate = voiceArray[0][2]
+    const voicevoxId = voiceArray[0][3]
+    setVoice(isDefault, text, rate, voicevoxId)
+    // 読み上げるVoice配列の削除
+    voiceArray.shift()
+  }
+}, 1000); //1秒ごとに繰り返す

@@ -152,7 +152,7 @@ var mo = new MutationObserver(function () {
   if (isNotRead == true) { return }
 
   // VOICEVOX機能
-  if (text.indexOf(':') !== -1) {
+  if (text.indexOf('ずんだもん') !== -1) {
     voiceArray.push([false, text, 1, 3])
     return
   }

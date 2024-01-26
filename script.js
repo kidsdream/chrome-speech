@@ -11,7 +11,7 @@ var element_timer = document.querySelector('#timer p span')
 const date1 = new Date();
 const date2 = (date1.getMonth() + 1) + "月" + date1.getDate() + "日" + date1.getHours() + "時" + date1.getMinutes() + "分"
 
-let userNameArray = ['きら'];
+let userNameArray = ['きら', 'rico'];
 let voiceArray = [];
 
 // *********
@@ -269,6 +269,7 @@ let isEnd = false
 let isEnding = false
 let isEindingVoice = false
 const bgm = new Audio();
+console.log(bgm)
 // タイマー検知
 //MutationObserver（インスタンス）の作成
 var mo_timer = new MutationObserver(function () {

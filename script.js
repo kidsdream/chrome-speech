@@ -107,8 +107,9 @@ async function callVoicevoxApi(text, rate, voiceId) {
       clearInterval(timerid)
     }
     retryCount++
-    if (retryCount >= 10) {
-      console.error("リトライ回数が10回を超えたため、処理を中止します");
+    if (retryCount >= 30) {
+      isVoice = false
+      console.error("リトライ回数が30回を超えたため、処理を中止します");
       clearInterval(timerid);
     }
   }
@@ -126,7 +127,9 @@ var mo = new MutationObserver(function () {
   let getText = document.querySelector('.column p').innerText
   // トリップ削除
   let text = getText.replace(/◆.*:/, ':')
-  const name = text.match(/\d+\.\s(.+?)\s:/)[1];
+  console.log(text)
+  const name = text.match(/\d+\.\s(.+?):/)[1];
+  console.log(name)
   // 「読み上げ再開」が含まれていた場合、再び読み上げられないようにする。
   if (text.indexOf('読み上げ再開') !== -1 || text.indexOf('読上げ再開') !== -1 || text.indexOf('読上再開') !== -1) {
     // 読み上げ再開の人のUserIDを取得して配列から削除する
@@ -159,17 +162,45 @@ var mo = new MutationObserver(function () {
 
   // VOICEVOX機能
   if (text.indexOf('ずんだもん') !== -1) {
+    let voiceCommand = 3
+    let rate = 1
+    // あまあま
+    if (text.indexOf('甘々') !== -1 || text.indexOf('あまあま') !== -1 || text.indexOf('好き') !== -1 || text.indexOf('すき') !== -1) {
+      voiceCommand = 1
+    }
+    // セクシー
+    if (text.indexOf('セクシー') !== -1 || text.indexOf('あぁん') !== -1 || text.indexOf('えっち') !== -1 || text.indexOf('エッチ') !== -1) {
+      voiceCommand = 5
+    }
+    // ツンツン
+    if (text.indexOf('だからね') !== -1 || text.indexOf('ツンツン') !== -1 || text.indexOf('怒') !== -1) {
+      voiceCommand = 7
+    }
+    // ささやき
+    if (text.indexOf('囁') !== -1 || text.indexOf('ささや') !== -1 || text.indexOf('ひっそり') !== -1) {
+      voiceCommand = 22
+    }
+    // ヒソヒソ
+    if (text.indexOf('ヒソヒソ') !== -1 || text.indexOf('こっそり') !== -1) {
+      voiceCommand = 38
+    }
+    // ヘロヘロ
+    if (text.indexOf('ヘロヘロ') !== -1 || text.indexOf('ベロベロ') !== -1) {
+      voiceCommand = 75
+    }
+    // なみだめ
+    if (text.indexOf('涙目') !== -1) {
+      voiceCommand = 76
+    }
     // 早口
     if (text.indexOf('早口') !== -1 || text.indexOf('はやくち') !== -1) {
-      voiceArray.push([false, text, 2, 3])
-      return
+      rate = 2
     }
     // ゆっくり
     if (text.indexOf('ゆっくり') !== -1) {
-      voiceArray.push([false, text, 0.5, 3])
-      return
+      rate = 0.5
     }
-    voiceArray.push([false, text, 1, 3])
+    voiceArray.push([false, text, rate, voiceCommand])
     return
   }
   if (text.indexOf('四国めたん') !== -1) {
@@ -324,7 +355,7 @@ var mo_timer = new MutationObserver(function () {
   if (text == "00:57:00") {
     if (isEindingVoice) { return }
     isEindingVoice = true
-    voiceArray.push([true, text, 1, ''])
+    voiceArray.push([true, '配信終了3分前です。', 1, ''])
     isEnd = true
   }
 })

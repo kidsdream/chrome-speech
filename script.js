@@ -11,7 +11,7 @@ var element_timer = document.querySelector('#timer p span')
 const date1 = new Date();
 const date2 = (date1.getMonth() + 1) + "月" + date1.getDate() + "日" + date1.getHours() + "時" + date1.getMinutes() + "分"
 
-let userIdArray = ['42471cc839'];
+let userNameArray = ['きら'];
 let voiceArray = [];
 
 // *********
@@ -50,7 +50,7 @@ function sleep(waitMsec) {
 function setVoice(isDefault, text, rate, voicevoxId = '') {
   isVoice = true
   if (!isDefault) {
-    callVoicevoxApi(text, voicevoxId)
+    callVoicevoxApi(text, rate, voicevoxId)
     return
   }
     defaultPlay(text, rate)
@@ -82,7 +82,7 @@ function defaultPlay(text, rate) {
 
 let isVoice = false
 // VOICEVOXを使用して読み上げさせる
-async function callVoicevoxApi(text, voiceId) {
+async function callVoicevoxApi(text, rate, voiceId) {
   console.log('送信テキスト' + text)
   const res = await fetch(`https://api.tts.quest/v3/voicevox/synthesis?speaker=${voiceId}&text=${text}&key=e_A02-5-6810980`)
   const json = await res.json()
@@ -98,6 +98,7 @@ async function callVoicevoxApi(text, voiceId) {
       const music = new Audio()
       music.src = json.mp3DownloadUrl
       music.volume = 0.05
+      music.playbackRate = rate
       music.play()
         music.addEventListener("ended", (event) => {
           console.log('VOICEVOX再生完了')
@@ -124,47 +125,92 @@ var mo = new MutationObserver(function () {
 
   let getText = document.querySelector('.column p').innerText
   // トリップ削除
-  let text = getText.replace(/◆.*:/, '')
-
+  let text = getText.replace(/◆.*:/, ':')
+  const name = text.match(/\d+\.\s(.+?)\s:/)[1];
   // 「読み上げ再開」が含まれていた場合、再び読み上げられないようにする。
   if (text.indexOf('読み上げ再開') !== -1 || text.indexOf('読上げ再開') !== -1 || text.indexOf('読上再開') !== -1) {
     // 読み上げ再開の人のUserIDを取得して配列から削除する
-    userIdArray = userIdArray.filter(function(userId) {
-      return userId !== document.querySelector('.column input').value;
+    userNameArray = userNameArray.filter(function(userName) {
+      return userName !== name;
     });
-    console.log('読み上げ再開：' + document.querySelector('.column input').value)
+    console.log('読み上げ再開：' + name)
   }
   // 「読み上げ不要」が含まれていた場合読み上げられないようにする。
   if (text.indexOf('読み上げ不要') !== -1 || text.indexOf('読上げ不要') !== -1 || text.indexOf('読上不要') !== -1) {
     // 読み上げ不要の人のUserIDを取得して登録する
-    userIdArray.push(document.querySelector('.column input').value)
-    console.log('読み上げ不要：' + document.querySelector('.column input').value)
-    return
+    userNameArray.push(name)
+    console.log('読み上げ不要：' + name)
   }
   // 読み上げ不要ユーザーの場合は最初から読み上げないようにする
   let isNotRead = false
-  userIdArray.forEach(function (userId) {
-    if (userId == document.querySelector('.column input').value) {
+  userNameArray.forEach(function (userId) {
+    if (userId == name) {
       isNotRead = true
       return
     }
   })
-  if (isNotRead == true) { return }
+  if (isNotRead) {
+    const music = new Audio();
+    music.src = "https://soundeffect-lab.info/sound/button/mp3/cursor9.mp3"
+    music.volume = 0.07;
+    music.play();
+    return
+  }
 
   // VOICEVOX機能
   if (text.indexOf('ずんだもん') !== -1) {
+    // 早口
+    if (text.indexOf('早口') !== -1 || text.indexOf('はやくち') !== -1) {
+      voiceArray.push([false, text, 2, 3])
+      return
+    }
+    // ゆっくり
+    if (text.indexOf('ゆっくり') !== -1) {
+      voiceArray.push([false, text, 0.5, 3])
+      return
+    }
     voiceArray.push([false, text, 1, 3])
     return
   }
   if (text.indexOf('四国めたん') !== -1) {
+    // 早口
+    if (text.indexOf('早口') !== -1 || text.indexOf('はやくち') !== -1) {
+      voiceArray.push([false, text, 2, 2])
+      return
+    }
+    // ゆっくり
+    if (text.indexOf('ゆっくり') !== -1) {
+      voiceArray.push([false, text, 0.5, 2])
+      return
+    }
     voiceArray.push([false, text, 1, 2])
     return
   }
   if (text.indexOf('春日部つむぎ') !== -1) {
+    // 早口
+    if (text.indexOf('早口') !== -1 || text.indexOf('はやくち') !== -1) {
+      voiceArray.push([false, text, 2, 8])
+      return
+    }
+    // ゆっくり
+    if (text.indexOf('ゆっくり') !== -1) {
+      voiceArray.push([false, text, 0.5, 8])
+      return
+    }
     voiceArray.push([false, text, 1, 8])
     return
   }
   if (text.indexOf('波音リツ') !== -1) {
+    // 早口
+    if (text.indexOf('早口') !== -1 || text.indexOf('はやくち') !== -1) {
+      voiceArray.push([false, text, 2, 9])
+      return
+    }
+    // ゆっくり
+    if (text.indexOf('ゆっくり') !== -1) {
+      voiceArray.push([false, text, 0.5, 9])
+      return
+    }
     voiceArray.push([false, text, 1, 9])
     return
   }
@@ -172,10 +218,12 @@ var mo = new MutationObserver(function () {
   // 早口
   if (text.indexOf('早口') !== -1 || text.indexOf('はやくち') !== -1) {
     voiceArray.push([true, text, 2, ''])
+    return
   }
   // ゆっくり
   if (text.indexOf('ゆっくり') !== -1) {
     voiceArray.push([true, text, 0.5, ''])
+    return
   }
   voiceArray.push([true, text, 1, ''])
 })
@@ -190,7 +238,7 @@ var mo_player = new MutationObserver(function () {
     return
   }
   const text = document.querySelector('#room_prop .prop_block p span').innerHTML.substring(0, 2)
-  // if (Number(text) > 5) { return }
+  if (Number(text) > 5) { return }
   if (player < Number(text)) {
     voiceArray.push([true, `${text}名様いらっしゃい`, 1, ''])
   }

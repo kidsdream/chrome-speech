@@ -56,13 +56,23 @@ async function callVoicevoxApi(text, voiceId) {
       let retryWaitCount = 0
       // すでに発声中の場合は、しばらく待機してから発声する
       let waitTimerid = setInterval( async ()=>{
-        // 他に誰も発生していない場合
+        console.log('isPlayVoicevox:' + isPlayVoicevox)
+        console.log('speaking' + window.speechSynthesis.speaking)
+        if(window.speechSynthesis.speaking) {
+          window.speechSynthesis.paused
+        }
+        // TODO: うーむ、speakingがONになったままなんだよなぁ
+        // 他に誰も発声していない場合
         if (!isPlayVoicevox && !window.speechSynthesis.speaking) {
           isPlayVoicevox = true
           music.play()
           music.addEventListener("ended", (event) => {
             console.log('VOICEVOX再生完了')
             isPlayVoicevox = false
+            // その間に読まれなかった読み上げを一気に読み上げる。
+            while(window.speechSynthesis.paused) {
+              window.speechSynthesis.speaking
+            }
           });
           clearInterval(waitTimerid)
         }
@@ -123,7 +133,7 @@ var mo = new MutationObserver(function () {
   if (isNotRead == true) { return }
 
   // VOICEVOX機能
-  if (text.indexOf('ずんだもん') !== -1) {
+  if (text.indexOf(':') !== -1) {
     callVoicevoxApi(text, 3)
     return
   }
@@ -152,22 +162,12 @@ var mo = new MutationObserver(function () {
       voices.forEach(function (v, i) {
         if (v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
       });
-      let retryWaitCount = 0
-      // すでに発声中の場合は、しばらく待機してから発声する
-      let waitTimerid = setInterval(async () => {
-        // 他に誰も発生していない場合
-        if (!isPlayVoicevox) {
-          // 発言を再生
-          window.speechSynthesis.speak(uttr)
-          clearInterval(waitTimerid)
-        }
-        retryWaitCount++
-        if (retryWaitCount >= 30) {
-          console.error("音声開始待ちのリトライ回数が30回を超えたため、処理を中止します");
-          clearInterval(waitTimerid);
-          return
-        }
-      })
+      // 発言を再生
+      window.speechSynthesis.speak(uttr)
+      // 他に誰も発生していない場合
+      if (isPlayVoicevox) {
+        window.speechSynthesis.pause(uttr)
+      }
       return
     } else {
       alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
@@ -186,22 +186,12 @@ var mo = new MutationObserver(function () {
       voices.forEach(function(v, i){
         if(v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
       });
-      let retryWaitCount = 0
-      // すでに発声中の場合は、しばらく待機してから発声する
-      let waitTimerid = setInterval(async () => {
-        // 他に誰も発生していない場合
-        if (!isPlayVoicevox) {
-          // 発言を再生
-          window.speechSynthesis.speak(uttr)
-          clearInterval(waitTimerid)
-        }
-        retryWaitCount++
-        if (retryWaitCount >= 30) {
-          console.error("音声開始待ちのリトライ回数が30回を超えたため、処理を中止します");
-          clearInterval(waitTimerid);
-          return
-        }
-      })
+      // 発言を再生
+      window.speechSynthesis.speak(uttr)
+      // 他に誰も発生していない場合
+      if (isPlayVoicevox) {
+        window.speechSynthesis.pause(uttr)
+      }
       return
     } else {
       alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
@@ -218,22 +208,12 @@ var mo = new MutationObserver(function () {
     voices.forEach(function(v, i){
       if(v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
     });
-    let retryWaitCount = 0
-    // すでに発声中の場合は、しばらく待機してから発声する
-    let waitTimerid = setInterval(async () => {
-      // 他に誰も発生していない場合
-      if (!isPlayVoicevox) {
-        // 発言を再生
-        window.speechSynthesis.speak(uttr)
-        clearInterval(waitTimerid)
-      }
-      retryWaitCount++
-      if (retryWaitCount >= 30) {
-        console.error("音声開始待ちのリトライ回数が30回を超えたため、処理を中止します");
-        clearInterval(waitTimerid);
-        return
-      }
-    })
+    // 発言を再生
+    window.speechSynthesis.speak(uttr)
+    // 他に誰も発生していない場合
+    if (isPlayVoicevox) {
+      window.speechSynthesis.pause(uttr)
+    }
   } else {
     alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
   }
@@ -261,22 +241,12 @@ var mo_player = new MutationObserver(function () {
       voices.forEach(function(v, i){
         if(v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
       });
-      let retryWaitCount = 0
-      // すでに発声中の場合は、しばらく待機してから発声する
-      let waitTimerid = setInterval(async () => {
-        // 他に誰も発生していない場合
-        if (!isPlayVoicevox) {
-          // 発言を再生
-          window.speechSynthesis.speak(uttr)
-          clearInterval(waitTimerid)
-        }
-        retryWaitCount++
-        if (retryWaitCount >= 30) {
-          console.error("音声開始待ちのリトライ回数が30回を超えたため、処理を中止します");
-          clearInterval(waitTimerid);
-          return
-        }
-      })
+      // 発言を再生
+      window.speechSynthesis.speak(uttr)
+      // 他に誰も発生していない場合
+      if (isPlayVoicevox) {
+        window.speechSynthesis.pause(uttr)
+      }
     } else {
       alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
     }
@@ -372,22 +342,11 @@ var mo_timer = new MutationObserver(function () {
         if(v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
       });
       // 発言を再生
-      let retryWaitCount = 0
-      // すでに発声中の場合は、しばらく待機してから発声する
-      let waitTimerid = setInterval(async () => {
-        // 他に誰も発生していない場合
-        if (!isPlayVoicevox) {
-          // 発言を再生
-          window.speechSynthesis.speak(uttr)
-          clearInterval(waitTimerid)
-        }
-        retryWaitCount++
-        if (retryWaitCount >= 30) {
-          console.error("音声開始待ちのリトライ回数が30回を超えたため、処理を中止します");
-          clearInterval(waitTimerid);
-          return
-        }
-      })
+      window.speechSynthesis.speak(uttr)
+      // 他に誰も発生していない場合
+      if (isPlayVoicevox) {
+        window.speechSynthesis.pause(uttr)
+      }
     } else {
       alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
     }

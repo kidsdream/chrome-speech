@@ -2,6 +2,7 @@
 window.addEventListener("load", main, false);
 console.log("koe-koe読み上げ機能起動")
 var agent = window.navigator.userAgent.toLowerCase();
+console.log(agent)
 //監視する要素の指定
 var element = document.querySelector('#comment_show_area')
 var element_player = document.querySelector('#room_prop .prop_block span')
@@ -12,7 +13,6 @@ var element_timer = document.querySelector('#timer p span')
 const date1 = new Date();
 const date2 = (date1.getMonth() + 1) + "月" + date1.getDate() + "日" + date1.getHours() + "時" + date1.getMinutes() + "分"
 let mainVolume = 10
-console.log(agent)
 // Edgeからの場合はループバックさせるため音量を下げておく
 if(agent.indexOf('edg') > -1) {
   mainVolume = 1
@@ -32,7 +32,8 @@ uttr.volume = 0.03 * mainVolume
 // 初回ロード時のみボイスデータがロードできたら発音する
 speechSynthesis.addEventListener('voiceschanged', e => {
   var voices = speechSynthesis.getVoices();
-  voices.forEach(function(v, i){
+  voices.forEach(function (v, i) {
+    if(v.name == 'Google 日本語') uttr.voice = v;
     if(v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
   });
   // 発言を再生
@@ -75,6 +76,7 @@ function defaultPlay(text, rate) {
     uttr.rate = rate
     var voices = speechSynthesis.getVoices();
     voices.forEach(function (v, i) {
+      if(v.name == 'Google 日本語') uttr.voice = v;
       if (v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
     });
     // 発言を再生
@@ -295,11 +297,16 @@ var mo_star = new MutationObserver(function () {
   if (document.querySelector('#room_prop .prop_block:last-of-type span').innerHTML == undefined || null) {
     return
   }
-  if (star < document.querySelector('#room_prop .prop_block:last-of-type span').innerHTML) {
+  if (element_star.innerText.toString().length >= 3 && element_star.innerText.substring(element_star.length - 2) == '00') {
+    // 特別演出
+    const text = `${element_star.innerText.toString()}いいね、ありがとうなのだ！`
+    voiceArray.push([false, text, 1, 3])
+  } else if (star < document.querySelector('#room_prop .prop_block:last-of-type span').innerHTML) {
     const music = new Audio();
     music.src = "https://soundeffect-lab.info/sound/anime/mp3/pa1.mp3"
     music.volume = 0.09 * mainVolume
     music.play();
+    console.log('いいねをいただきました。')
   }
   star = document.querySelector('#room_prop .prop_block:last-of-type span').innerHTML
 })

@@ -20,7 +20,8 @@ if(agent.indexOf('edg') > -1) {
 
 let userNameArray = ['きら', 'rico'];
 let voiceArray = [];
-let zeroArray = ['いつもありがとうなのだ。'];
+let nonCommentCounter = 0;
+const nonCommentArray = ['ずんだもんは暇なのだ', '誰か、ずんだもんの相手をしてほしいのだ', 'もしもーし。ずんだもんなのだ。'];
 
 // *********
 // 配信開始時の設定情報
@@ -134,7 +135,7 @@ var mo = new MutationObserver(function () {
   if (document.querySelector('.new_post').innerHTML == undefined) {
     return
   }
-
+  nonCommentCounter = 0
   let getText = document.querySelector('.column p').innerText
   // トリップ削除
   let text = getText.replace(/◆.*:/, ':')
@@ -320,6 +321,14 @@ console.log(bgm)
 // タイマー検知
 //MutationObserver（インスタンス）の作成
 var mo_timer = new MutationObserver(function () {
+  nonCommentCounter++
+  // ずんだもんの独り言
+  if (nonCommentCounter >= 360) {
+    const text = nonCommentArray[Math.floor(Math.random()*nonCommentArray.length)]
+    console.log('ずんだもんの独り言' + text)
+    voiceArray.push([false, text, 1, 3])
+    nonCommentCounter = 0
+  }
   if (!isBGM) {
     // 枠開始時用設定
     // 枠の自動選曲機能

@@ -1,6 +1,7 @@
 "use strict"
 window.addEventListener("load", main, false);
 console.log("koe-koe読み上げ機能起動")
+var agent = window.navigator.userAgent.toLowerCase();
 //監視する要素の指定
 var element = document.querySelector('#comment_show_area')
 var element_player = document.querySelector('#room_prop .prop_block span')
@@ -10,9 +11,16 @@ var element_timer = document.querySelector('#timer p span')
 // 現在日時
 const date1 = new Date();
 const date2 = (date1.getMonth() + 1) + "月" + date1.getDate() + "日" + date1.getHours() + "時" + date1.getMinutes() + "分"
+let mainVolume = 10
+console.log(agent)
+// Edgeからの場合はループバックさせるため音量を下げておく
+if(agent.indexOf('edg') > -1) {
+  mainVolume = 1
+}
 
 let userNameArray = ['きら', 'rico'];
 let voiceArray = [];
+let zeroArray = ['いつもありがとうなのだ。'];
 
 // *********
 // 配信開始時の設定情報
@@ -20,7 +28,7 @@ let voiceArray = [];
 let isStarted = false
 const uttr = new SpeechSynthesisUtterance()
 uttr.text = '配信を開始しました。' + date2 + 'からの配信です。'
-uttr.volume = 0.03
+uttr.volume = 0.03 * mainVolume
 // 初回ロード時のみボイスデータがロードできたら発音する
 speechSynthesis.addEventListener('voiceschanged', e => {
   var voices = speechSynthesis.getVoices();
@@ -30,7 +38,8 @@ speechSynthesis.addEventListener('voiceschanged', e => {
   // 発言を再生
   if (!isStarted) {
     console.log(uttr.text)
-    window.speechSynthesis.speak(uttr);
+    // TODO: 読み上げ起動音声は一旦使用しない
+    // window.speechSynthesis.speak(uttr);
   }
   isStarted = true
 });
@@ -62,7 +71,7 @@ function defaultPlay(text, rate) {
     // 発言を設定
     const uttr = new SpeechSynthesisUtterance()
     uttr.text = text
-    uttr.volume = 0.025
+    uttr.volume = 0.025 * mainVolume
     uttr.rate = rate
     var voices = speechSynthesis.getVoices();
     voices.forEach(function (v, i) {
@@ -97,7 +106,7 @@ async function callVoicevoxApi(text, rate, voiceId) {
     if(jsonStatus.isAudioReady) {
       const music = new Audio()
       music.src = json.mp3DownloadUrl
-      music.volume = 0.05
+      music.volume = 0.05 * mainVolume
       music.playbackRate = rate
       music.play()
         music.addEventListener("ended", (event) => {
@@ -155,7 +164,7 @@ var mo = new MutationObserver(function () {
   if (isNotRead) {
     const music = new Audio();
     music.src = "https://soundeffect-lab.info/sound/button/mp3/cursor9.mp3"
-    music.volume = 0.07;
+    music.volume = 0.07 * mainVolume
     music.play();
     return
   }
@@ -289,7 +298,7 @@ var mo_star = new MutationObserver(function () {
   if (star < document.querySelector('#room_prop .prop_block:last-of-type span').innerHTML) {
     const music = new Audio();
     music.src = "https://soundeffect-lab.info/sound/anime/mp3/pa1.mp3"
-    music.volume = 0.09;
+    music.volume = 0.09 * mainVolume
     music.play();
   }
   star = document.querySelector('#room_prop .prop_block:last-of-type span').innerHTML
@@ -309,16 +318,16 @@ var mo_timer = new MutationObserver(function () {
     // 枠の自動選曲機能
     if (date1.getHours() >= 9 && date1.getHours() <= 11) {
       bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/209_long_BPM80.mp3"
-      bgm.volume = 0.015
+      bgm.volume = 0.015 * mainVolume
     } else if(date1.getHours() >= 12 && date1.getHours() <= 17) {
       bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/212_long_BPM132.mp3"
-      bgm.volume = 0.01
+      bgm.volume = 0.01 * mainVolume
     } else if(date1.getHours() >= 18 && date1.getHours() <= 21) {
       bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/296_long_BPM85.mp3"
-      bgm.volume = 0.02
+      bgm.volume = 0.02 * mainVolume
     } else {
       bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M19_MusicBox_long_BPM78-55.mp3"
-      bgm.volume = 0.07
+      bgm.volume = 0.07 * mainVolume
     }
     bgm.loop = true
     bgm.play()
@@ -336,7 +345,7 @@ var mo_timer = new MutationObserver(function () {
         // エンディングソング
         const music = new Audio();
         music.src = "https://bgmer.net/wp-content/uploads/2021/12/206_long_BPM172.mp3"
-        music.volume = 0.035
+        music.volume = 0.035 * mainVolume
         music.loop = true
         music.play()
         isEnding = true

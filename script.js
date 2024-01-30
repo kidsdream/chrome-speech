@@ -66,7 +66,6 @@ function initVoice() {
   uttr.volume = 0.03 * mainVolumeInt
   if (agent.indexOf('iphone') > -1) {
     console.log('ios:' + uttr.text)
-    speechSynthesis.addEventListener('voiceschanged', e => {
     var voices = speechSynthesis.getVoices();
     voices.forEach(function (v, i) {
       if (v.name == 'Kyoko') uttr.voice = v;
@@ -74,7 +73,6 @@ function initVoice() {
     // 発言を再生
     console.log(uttr.text)
     window.speechSynthesis.speak(uttr);
-  });
   }
   // 初回ロード時のみボイスデータがロードできたら発音する
   speechSynthesis.addEventListener('voiceschanged', e => {

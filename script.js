@@ -23,7 +23,7 @@ if (agent.indexOf('edg') > -1) {
   mainVolumeInt = 1
 }
 // Edgeからの場合はループバックさせるため音量を下げておく
-if (agent.indexOf('iphone') > -1) {
+if (agent.indexOf('iphone') > -1 || agent.indexOf('ipad') > -1) {
   iOSMusicVolumeInt = 0.001
   iOSVoiceVolumeInt = 30
 }

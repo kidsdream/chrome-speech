@@ -4,6 +4,7 @@ body {
 }
 
 #header {
+  background-color: pink !important;
 }
 
 /* 配信開始ボタン */

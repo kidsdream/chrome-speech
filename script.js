@@ -23,7 +23,7 @@ if (agent.indexOf('edg') > -1) {
   mainVolumeInt = 1
 }
 // Edgeからの場合はループバックさせるため音量を下げておく
-if (agent.indexOf('iphone') > -1 || agent.indexOf('ipad') > -1) {
+if (agent.indexOf('iphone') > -1 || agent.indexOf('applewebkit') > -1) {
   iOSMusicVolumeInt = 0.001
   iOSVoiceVolumeInt = 30
 }
@@ -70,7 +70,7 @@ function initVoice() {
   let uttr = new SpeechSynthesisUtterance()
   uttr.text = '配信を開始しました。' + nowDateString + 'からの配信です。'
   uttr.volume = 0.03 * mainVolumeInt
-  if (agent.indexOf('iphone') > -1) {
+  if (agent.indexOf('iphone') > -1 || agent.indexOf('applewebkit') > -1) {
     var voices = speechSynthesis.getVoices();
     voices.forEach(function (v, i) {
       if (v.name == 'Kyoko') uttr.voice = v;
@@ -101,7 +101,7 @@ function mainProcess() {
   var element_star = document.querySelector('#room_prop .prop_block:last-of-type span')
   var element_timer = document.querySelector('#timer p span')
 
-  let koeUserNameArray = ['きら', 'rico'];
+  let koeUserNameArray = ['キラ', 'rico'];
   let userVoiceArray = [];
   let nonCommentCounter = 0;
   const nonCommentArray = ['ずんだもんは暇なのだ', '誰か、ずんだもんの相手をしてほしいのだ', 'もしもーし。ずんだもんなのだ。'];

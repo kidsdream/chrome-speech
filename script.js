@@ -25,7 +25,7 @@ if (agent.indexOf('edg') > -1) {
 // Edgeからの場合はループバックさせるため音量を下げておく
 if (agent.indexOf('iphone') > -1) {
   iOSMusicVolumeInt = 0.001
-  iOSVoiceVolumeInt = 20
+  iOSVoiceVolumeInt = 30
 }
 
 // 配信開始ボタン追加
@@ -143,15 +143,6 @@ function mainProcess() {
       uttr.text = text
       uttr.volume = 0.025 * mainVolumeInt * iOSVoiceVolumeInt
       uttr.rate = rate
-      if (agent.indexOf('iphone') > -1) {
-        var voices = speechSynthesis.getVoices();
-        voices.forEach(function (v, i) {
-          if (v.name == 'Kyoko') uttr.voice = v;
-        });
-        // 発言を再生
-        console.log('iOS:' + uttr.text)
-        window.speechSynthesis.speak(uttr);
-      }
       let isVoiced = false
       console.log('Voice準備')
       if(isVoiced) { return }

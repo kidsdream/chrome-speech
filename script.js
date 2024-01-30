@@ -17,6 +17,7 @@ const nowDateString = (nowDate.getMonth() + 1) + "月" + nowDate.getDate() + "�
 // メイン音量
 let mainVolumeInt = 10
 let iOSMusicVolumeInt = 1
+let iOSVoiceVolumeInt = 1
 // Edgeからの場合はループバックさせるため音量を下げておく
 if (agent.indexOf('edg') > -1) {
   mainVolumeInt = 1
@@ -24,6 +25,7 @@ if (agent.indexOf('edg') > -1) {
 // Edgeからの場合はループバックさせるため音量を下げておく
 if (agent.indexOf('iphone') > -1) {
   iOSMusicVolumeInt = 0.001
+  iOSVoiceVolumeInt = 20
 }
 
 // 配信開始ボタン追加
@@ -139,7 +141,7 @@ function mainProcess() {
       // 発言を設定
       const uttr = new SpeechSynthesisUtterance()
       uttr.text = text
-      uttr.volume = 0.025 * mainVolumeInt
+      uttr.volume = 0.025 * mainVolumeInt * iOSVoiceVolumeInt
       uttr.rate = rate
       if (agent.indexOf('iphone') > -1) {
         var voices = speechSynthesis.getVoices();

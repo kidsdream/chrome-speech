@@ -9,6 +9,12 @@ var element_player = document.querySelector('#room_prop .prop_block span')
 var element_star = document.querySelector('#room_prop .prop_block:last-of-type span')
 var element_timer = document.querySelector('#timer p span')
 
+// GoogleFonts追加
+const font_link = document.createElement('link');
+font_link.href = 'https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap'
+font_link.rel = 'stylesheet'
+document.querySelector('head').appendChild(font_link);
+
 // 現在日時
 const date1 = new Date();
 const date2 = (date1.getMonth() + 1) + "月" + date1.getDate() + "日" + date1.getHours() + "時" + date1.getMinutes() + "分"
@@ -323,7 +329,7 @@ console.log(bgm)
 var mo_timer = new MutationObserver(function () {
   nonCommentCounter++
   // ずんだもんの独り言
-  if (nonCommentCounter >= 360) {
+  if (nonCommentCounter >= 600) {
     const text = nonCommentArray[Math.floor(Math.random()*nonCommentArray.length)]
     console.log('ずんだもんの独り言' + text)
     voiceArray.push([false, text, 1, 3])

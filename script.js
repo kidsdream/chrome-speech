@@ -128,6 +128,16 @@ function mainProcess() {
       uttr.volume = 0.025 * mainVolumeInt
       uttr.rate = rate
       var voices = speechSynthesis.getVoices();
+      if (agent.indexOf('iphone') > -1) {
+        console.log('ios:' + uttr.text)
+        var voices = speechSynthesis.getVoices();
+        voices.forEach(function (v, i) {
+          if (v.name == 'Kyoko') uttr.voice = v;
+        });
+        // 発言を再生
+        console.log(uttr.text)
+        window.speechSynthesis.speak(uttr);
+      }
       voices.forEach(function (v, i) {
         if (v.name == 'Google 日本語') uttr.voice = v;
         if (v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;

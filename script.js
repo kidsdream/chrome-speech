@@ -23,7 +23,7 @@ if (agent.indexOf('edg') > -1) {
 }
 // Edgeからの場合はループバックさせるため音量を下げておく
 if (agent.indexOf('iphone') > -1) {
-  iOSMusicVolumeInt = 0.1
+  iOSMusicVolumeInt = 0.01
 }
 
 // 配信開始ボタン追加

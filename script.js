@@ -16,9 +16,14 @@ const nowDateString = (nowDate.getMonth() + 1) + "月" + nowDate.getDate() + "�
 
 // メイン音量
 let mainVolumeInt = 10
+let iOSMusicVolumeInt = 1
 // Edgeからの場合はループバックさせるため音量を下げておく
 if (agent.indexOf('edg') > -1) {
   mainVolumeInt = 1
+}
+// Edgeからの場合はループバックさせるため音量を下げておく
+if (agent.indexOf('iphone') > -1) {
+  iOSMusicVolumeInt = 0.1
 }
 
 // 配信開始ボタン追加
@@ -407,16 +412,16 @@ function mainProcess() {
       // 枠の自動選曲機能
       if (nowDate.getHours() >= 9 && nowDate.getHours() <= 11) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/209_long_BPM80.mp3"
-        bgm.volume = 0.015 * mainVolumeInt
+        bgm.volume = 0.015 * mainVolumeInt * iOSMusicVolumeInt
       } else if (nowDate.getHours() >= 12 && nowDate.getHours() <= 17) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/212_long_BPM132.mp3"
-        bgm.volume = 0.01 * mainVolumeInt
+        bgm.volume = 0.01 * mainVolumeInt * iOSMusicVolumeInt
       } else if (nowDate.getHours() >= 18 && nowDate.getHours() <= 21) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/296_long_BPM85.mp3"
-        bgm.volume = 0.02 * mainVolumeInt
+        bgm.volume = 0.02 * mainVolumeInt * iOSMusicVolumeInt
       } else {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M19_MusicBox_long_BPM78-55.mp3"
-        bgm.volume = 0.07 * mainVolumeInt
+        bgm.volume = 0.07 * mainVolumeInt * iOSMusicVolumeInt
       }
       bgm.loop = true
       bgm.play()
@@ -434,7 +439,7 @@ function mainProcess() {
           // エンディングソング
           const music = new Audio();
           music.src = "https://bgmer.net/wp-content/uploads/2021/12/206_long_BPM172.mp3"
-          music.volume = 0.035 * mainVolumeInt
+          music.volume = 0.035 * mainVolumeInt * iOSMusicVolumeInt
           music.loop = true
           music.play()
           isEnding = true

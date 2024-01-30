@@ -15,6 +15,13 @@ font_link_element.href = 'https://fonts.googleapis.com/css2?family=Kosugi+Maru&d
 font_link_element.rel = 'stylesheet'
 document.querySelector('head').appendChild(font_link_element);
 
+// 現在日時
+const nowDate = new Date();
+const nowDateString = (nowDate.getMonth() + 1) + "月" + nowDate.getDate() + "日" + nowDate.getHours() + "時" + nowDate.getMinutes() + "分"
+
+// メイン音量
+let mainVolumeInt = 10
+
 // 配信開始ボタン追加
 let start_str_element = document.createElement('span');
 start_str_element.textContent = '読み上げツール起動'
@@ -40,21 +47,16 @@ function castStart() {
   }
 }
 
-function mainProcess() {
-  // 現在日時
-  const nowDate = new Date();
-  const nowDateString = (nowDate.getMonth() + 1) + "月" + nowDate.getDate() + "日" + nowDate.getHours() + "時" + nowDate.getMinutes() + "分"
-  let mainVolumeInt = 10
-  // Edgeからの場合はループバックさせるため音量を下げておく
-  if (agent.indexOf('edg') > -1) {
-    mainVolumeInt = 1
-  }
+// 初回ボイスボタン設定
+let init_voice_btn_input_element = document.createElement('input');
+init_voice_btn_input_element.id = 'init_voice'
+init_voice_btn_input_element.type = 'button'
+init_voice_btn_input_element.value = '配信開始時ボイス'
+document.querySelector('#header').appendChild(init_voice_btn_input_element);
+document.querySelector('#init_voice').addEventListener('click', initVoice);
 
-  let koeUserNameArray = ['きら', 'rico'];
-  let userVoiceArray = [];
-  let nonCommentCounter = 0;
-  const nonCommentArray = ['ずんだもんは暇なのだ', '誰か、ずんだもんの相手をしてほしいのだ', 'もしもーし。ずんだもんなのだ。'];
-
+// 配信開始時のボイス
+function initVoice() {
   // *********
   // 配信開始時の設定情報
   // *********
@@ -73,10 +75,22 @@ function mainProcess() {
     if (!isStarted) {
       console.log(uttr.text)
       // TODO: 読み上げ起動音声は一旦使用しない
-      // window.speechSynthesis.speak(uttr);
+      window.speechSynthesis.speak(uttr);
     }
     isStarted = true
   });
+}
+
+function mainProcess() {
+  // Edgeからの場合はループバックさせるため音量を下げておく
+  if (agent.indexOf('edg') > -1) {
+    mainVolumeInt = 1
+  }
+
+  let koeUserNameArray = ['きら', 'rico'];
+  let userVoiceArray = [];
+  let nonCommentCounter = 0;
+  const nonCommentArray = ['ずんだもんは暇なのだ', '誰か、ずんだもんの相手をしてほしいのだ', 'もしもーし。ずんだもんなのだ。'];
 
   // *********
   // Utils関数

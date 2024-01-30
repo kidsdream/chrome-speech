@@ -64,6 +64,10 @@ function initVoice() {
   const uttr = new SpeechSynthesisUtterance()
   uttr.text = '配信を開始しました。' + nowDateString + 'からの配信です。'
   uttr.volume = 0.03 * mainVolumeInt
+  if (agent.indexOf('iphone') > -1) {
+    console.log('ios:' + uttr.text)
+    window.speechSynthesis.speak(uttr);
+  }
   // 初回ロード時のみボイスデータがロードできたら発音する
   speechSynthesis.addEventListener('voiceschanged', e => {
     var voices = speechSynthesis.getVoices();
@@ -72,12 +76,8 @@ function initVoice() {
       if (v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
     });
     // 発言を再生
-    if (!isStarted) {
-      console.log(uttr.text)
-      // TODO: 読み上げ起動音声は一旦使用しない
-      window.speechSynthesis.speak(uttr);
-    }
-    isStarted = true
+    console.log(uttr.text)
+    window.speechSynthesis.speak(uttr);
   });
 }
 

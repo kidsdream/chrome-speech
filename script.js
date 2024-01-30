@@ -3,11 +3,6 @@ window.addEventListener("load", main, false);
 console.log("koe-koe読み上げ機能起動準備")
 var agent = window.navigator.userAgent.toLowerCase();
 console.log(agent)
-//監視する要素の指定
-var element = document.querySelector('#comment_show_area')
-var element_player = document.querySelector('#room_prop .prop_block span')
-var element_star = document.querySelector('#room_prop .prop_block:last-of-type span')
-var element_timer = document.querySelector('#timer p span')
 
 // GoogleFonts追加
 let font_link_element = document.createElement('link');
@@ -21,6 +16,10 @@ const nowDateString = (nowDate.getMonth() + 1) + "月" + nowDate.getDate() + "�
 
 // メイン音量
 let mainVolumeInt = 10
+// Edgeからの場合はループバックさせるため音量を下げておく
+if (agent.indexOf('edg') > -1) {
+  mainVolumeInt = 1
+}
 
 // 配信開始ボタン追加
 let start_str_element = document.createElement('span');
@@ -57,25 +56,25 @@ document.querySelector('#init_voice').addEventListener('click', initVoice);
 
 // 配信開始時のボイス
 function initVoice() {
+  console.log('initVoice')
   // *********
   // 配信開始時の設定情報
   // *********
-  let isStarted = false
-  const uttr = new SpeechSynthesisUtterance()
+  let uttr = new SpeechSynthesisUtterance()
   uttr.text = '配信を開始しました。' + nowDateString + 'からの配信です。'
   uttr.volume = 0.03 * mainVolumeInt
   if (agent.indexOf('iphone') > -1) {
-    console.log('ios:' + uttr.text)
     var voices = speechSynthesis.getVoices();
     voices.forEach(function (v, i) {
       if (v.name == 'Kyoko') uttr.voice = v;
     });
     // 発言を再生
-    console.log(uttr.text)
+    console.log('iOS:' + uttr.text)
     window.speechSynthesis.speak(uttr);
   }
-  // 初回ロード時のみボイスデータがロードできたら発音する
+  let isVoiced = false
   speechSynthesis.addEventListener('voiceschanged', e => {
+    if(isVoiced) { return }
     var voices = speechSynthesis.getVoices();
     voices.forEach(function (v, i) {
       if (v.name == 'Google 日本語') uttr.voice = v;
@@ -84,19 +83,27 @@ function initVoice() {
     // 発言を再生
     console.log(uttr.text)
     window.speechSynthesis.speak(uttr);
+    isVoiced = true
   });
 }
 
 function mainProcess() {
-  // Edgeからの場合はループバックさせるため音量を下げておく
-  if (agent.indexOf('edg') > -1) {
-    mainVolumeInt = 1
-  }
+  //監視する要素の指定
+  var element = document.querySelector('#comment_show_area')
+  var element_player = document.querySelector('#room_prop .prop_block span')
+  var element_star = document.querySelector('#room_prop .prop_block:last-of-type span')
+  var element_timer = document.querySelector('#timer p span')
 
   let koeUserNameArray = ['きら', 'rico'];
   let userVoiceArray = [];
   let nonCommentCounter = 0;
   const nonCommentArray = ['ずんだもんは暇なのだ', '誰か、ずんだもんの相手をしてほしいのだ', 'もしもーし。ずんだもんなのだ。'];
+
+  // 発声練習
+  let uttr = new SpeechSynthesisUtterance()
+  uttr.text = ''
+  uttr.volume = 0
+  window.speechSynthesis.speak(uttr);
 
   // *********
   // Utils関数
@@ -112,6 +119,7 @@ function mainProcess() {
   // 読み上げ内容を連想配列に設定する
   function setVoice(isDefault, text, rate, voicevoxId = '') {
     isVoice = true
+    console.log('setVoice' + text)
     if (!isDefault) {
       callVoicevoxApi(text, rate, voicevoxId)
       return
@@ -122,28 +130,33 @@ function mainProcess() {
   // デフォルトの読み上げちゃんで読み上げさせる
   function defaultPlay(text, rate) {
     if ('speechSynthesis' in window) {
+      console.log('defaultPlay')
       // 発言を設定
       const uttr = new SpeechSynthesisUtterance()
       uttr.text = text
       uttr.volume = 0.025 * mainVolumeInt
       uttr.rate = rate
-      var voices = speechSynthesis.getVoices();
       if (agent.indexOf('iphone') > -1) {
-        console.log('ios:' + uttr.text)
         var voices = speechSynthesis.getVoices();
         voices.forEach(function (v, i) {
           if (v.name == 'Kyoko') uttr.voice = v;
         });
         // 発言を再生
-        console.log(uttr.text)
+        console.log('iOS:' + uttr.text)
         window.speechSynthesis.speak(uttr);
       }
+      let isVoiced = false
+      console.log('Voice準備')
+      if(isVoiced) { return }
+      var voices = speechSynthesis.getVoices();
       voices.forEach(function (v, i) {
         if (v.name == 'Google 日本語') uttr.voice = v;
         if (v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
       });
       // 発言を再生
-      window.speechSynthesis.speak(uttr)
+      console.log(uttr.text)
+      window.speechSynthesis.speak(uttr);
+      isVoiced = true
       // 話し終わった場合
       uttr.onend = function () {
         isVoice = false
@@ -201,9 +214,7 @@ function mainProcess() {
     let getText = document.querySelector('.column p').innerText
     // トリップ削除
     let text = getText.replace(/◆.*:/, ':')
-    console.log(text)
     const name = text.match(/\d+\.\s(.+?):/)[1];
-    console.log(name)
     // 「読み上げ再開」が含まれていた場合、再び読み上げられないようにする。
     if (text.indexOf('読み上げ再開') !== -1 || text.indexOf('読上げ再開') !== -1 || text.indexOf('読上再開') !== -1) {
       // 読み上げ再開の人のUserIDを取得して配列から削除する
@@ -331,6 +342,7 @@ function mainProcess() {
       return
     }
     userVoiceArray.push([true, text, 1, ''])
+    console.log('設定配列：' + text + 'を設定')
   })
 
   let player = 0
@@ -379,7 +391,6 @@ function mainProcess() {
   let isEnding = false
   let isEindingVoice = false
   const bgm = new Audio();
-  console.log(bgm)
   // タイマー検知
   //MutationObserver（インスタンス）の作成
   var mo_timer = new MutationObserver(function () {

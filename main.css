@@ -1,5 +1,9 @@
 body {
-  width: 400px;
+  background-color: gray !important;
+}
+
+#header {
+  
 }
 
 /* 配信開始ボタン */

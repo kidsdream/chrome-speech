@@ -14,5 +14,12 @@
     "default_title": "koe-koe配信サイト読み上げツール",
     "default_icon": "icon_48x48.png",
     "default_popup": "main.html"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://live.koe-koe.com/*"],
+      "js": ["script.js"],
+      "css": ["main.css"]
+    }
+  ]
 }

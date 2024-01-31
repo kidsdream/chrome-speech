@@ -127,7 +127,7 @@ function mainProcess() {
   function setVoice(isDefault, text, rate, voicevoxId = '') {
     isVoice = true
     console.log('setVoice' + text)
-    if (!isDefault) {
+    if (!isDefault && !(agent.indexOf('macintosh') > -1)) {
       callVoicevoxApi(text, rate, voicevoxId)
       return
     }

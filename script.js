@@ -25,7 +25,7 @@ if (agent.indexOf('edg') > -1) {
 // Edgeからの場合はループバックさせるため音量を下げておく
 if (agent.indexOf('iphone') > -1 || agent.indexOf('macintosh') > -1) {
   iOSMusicVolumeInt = 0.001
-  iOSVoiceVolumeInt = 30
+  iOSVoiceVolumeInt = 100
 }
 
 // 配信開始ボタン追加
@@ -244,7 +244,7 @@ function mainProcess() {
     }
 
     // VOICEVOX機能
-    if (text.indexOf(':') !== -1) {
+    if (text.indexOf('ずんだもん') !== -1) {
       let voiceCommand = 3
       let rate = 1
       // あまあま

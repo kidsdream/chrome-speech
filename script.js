@@ -23,7 +23,7 @@ if (agent.indexOf('edg') > -1) {
   mainVolumeInt = 1
 }
 // Edgeからの場合はループバックさせるため音量を下げておく
-if (agent.indexOf('iphone') > -1 || agent.indexOf('applewebkit') > -1) {
+if (agent.indexOf('iphone') > -1 || agent.indexOf('macintosh') > -1) {
   iOSMusicVolumeInt = 0.001
   iOSVoiceVolumeInt = 30
 }
@@ -70,7 +70,7 @@ function initVoice() {
   let uttr = new SpeechSynthesisUtterance()
   uttr.text = '配信を開始しました。' + nowDateString + 'からの配信です。'
   uttr.volume = 0.03 * mainVolumeInt
-  if (agent.indexOf('iphone') > -1 || agent.indexOf('applewebkit') > -1) {
+  if (agent.indexOf('iphone') > -1 || agent.indexOf('macintosh') > -1) {
     var voices = speechSynthesis.getVoices();
     voices.forEach(function (v, i) {
       if (v.name == 'Kyoko') uttr.voice = v;
@@ -244,7 +244,7 @@ function mainProcess() {
     }
 
     // VOICEVOX機能
-    if (text.indexOf('ずんだもん') !== -1) {
+    if (text.indexOf(':') !== -1) {
       let voiceCommand = 3
       let rate = 1
       // あまあま

@@ -257,7 +257,11 @@ function mainProcess() {
     let getText = document.querySelector('.column p').innerText
     // トリップ削除
     let text = getText.replace(/◆.*:/, ':')
-    const name = text.match(/\d+\.\s(.+?):/)[1];
+    // コメ番読み上げ削除
+    text = getText.replace(/^(\d+\.\s)/, ':')
+    const name = text.match(/:(.*?):/)[1];
+    console.log('text:' + text)
+    console.log('name:' + name)
     // 「読み上げ再開」が含まれていた場合、再び読み上げられないようにする。
     if (text.indexOf('読み上げ再開') !== -1 || text.indexOf('読上げ再開') !== -1 || text.indexOf('読上再開') !== -1) {
       // 読み上げ再開の人のUserNameを取得して配列から削除する

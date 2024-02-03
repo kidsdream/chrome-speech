@@ -10,6 +10,11 @@ font_link_element.href = 'https://fonts.googleapis.com/css2?family=Kosugi+Maru&d
 font_link_element.rel = 'stylesheet'
 document.querySelector('head').appendChild(font_link_element);
 
+let koeUserNameArray = ['キラ', 'rico'];
+let userVoiceArray = [];
+let nonCommentCounter = 0;
+const nonCommentArray = ['ずんだもんは暇なのだ', '誰か、ずんだもんの相手をしてほしいのだ', 'もしもーし。ずんだもんなのだ。'];
+
 // 現在日時
 const nowDate = new Date();
 const nowDateString = (nowDate.getMonth() + 1) + "月" + nowDate.getDate() + "日" + nowDate.getHours() + "時" + nowDate.getMinutes() + "分"
@@ -53,6 +58,38 @@ function castStart() {
   }
 }
 
+// 自動読み上げ
+let voice_str_element = document.createElement('span');
+voice_str_element.textContent = '自動読み上げ'
+document.querySelector('#header').appendChild(voice_str_element);
+let voice_btn_div_element = document.createElement('div');
+voice_btn_div_element.className = 'toggle_button'
+let voice_btn_input_element = document.createElement('input');
+voice_btn_input_element.id = 'auto_voice'
+voice_btn_input_element.className = 'toggle_input'
+voice_btn_input_element.type = 'checkbox'
+voice_btn_input_element.checked = 'true'
+let voice_btn_label_element = document.createElement('label');
+voice_btn_label_element.for = 'auto_voice'
+voice_btn_label_element.className = 'toggle_label'
+document.querySelector('#header').appendChild(voice_str_element);
+voice_btn_div_element.appendChild(voice_btn_input_element);
+voice_btn_div_element.appendChild(voice_btn_label_element);
+document.querySelector('#header').appendChild(voice_btn_div_element);
+
+let isAutoVoice = true
+// 自動読み上げボタン切り替え処理
+document.querySelector('#auto_voice').addEventListener('change', autoVoice);
+function autoVoice() {
+  if (!document.querySelector('#auto_voice').checked) {
+    console.log('自動読み上げをOFF')
+    isAutoVoice = false
+  } else {
+    console.log('自動読み上げをON')
+    isAutoVoice = true
+  }
+}
+
 // 初回ボイスボタン設定
 let init_voice_btn_input_element = document.createElement('input');
 init_voice_btn_input_element.id = 'init_voice'
@@ -70,15 +107,6 @@ function initVoice() {
   let uttr = new SpeechSynthesisUtterance()
   uttr.text = '配信を開始しました。' + nowDateString + 'からの配信です。'
   uttr.volume = 0.03 * mainVolumeInt
-  if (agent.indexOf('iphone') > -1 || agent.indexOf('macintosh') > -1) {
-    var voices = speechSynthesis.getVoices();
-    voices.forEach(function (v, i) {
-      if (v.name == 'Kyoko') uttr.voice = v;
-    });
-    // 発言を再生
-    console.log('iOS:' + uttr.text)
-    window.speechSynthesis.speak(uttr);
-  }
   let isVoiced = false
   speechSynthesis.addEventListener('voiceschanged', e => {
     if(isVoiced) { return }
@@ -94,6 +122,117 @@ function initVoice() {
   });
 }
 
+// 次の読み上げボタン設定
+let next_voice_btn_input_element = document.createElement('input');
+next_voice_btn_input_element.id = 'next_voice'
+next_voice_btn_input_element.type = 'button'
+next_voice_btn_input_element.value = '次のボイスへ'
+document.querySelector('#header').appendChild(next_voice_btn_input_element);
+document.querySelector('#next_voice').addEventListener('click', nextVoice);
+
+function nextVoice() {
+  // TODO: 次の読み上げ対象がない場合は非活性にしたい
+  // Voice配列にデータが存在する場合
+  if (userVoiceArray.length > 0) {
+    const isDefault = userVoiceArray[0][0]
+    const text = userVoiceArray[0][1]
+    const rate = userVoiceArray[0][2]
+    const voicevoxId = userVoiceArray[0][3]
+    setVoice(isDefault, text, rate, voicevoxId)
+    // 読み上げるVoice配列の削除
+    userVoiceArray.shift()
+  }
+}
+
+// *********
+// Utils関数
+// *********
+
+// JavaScriptの処理を指定ミリ秒中断させる
+function sleep(waitMsec) {
+  var startMsec = new Date();
+  // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
+  while (new Date() - startMsec < waitMsec);
+}
+
+// 読み上げ内容を連想配列に設定する
+function setVoice(isDefault, text, rate, voicevoxId = '') {
+  isVoice = true
+  console.log('setVoice' + text)
+  if (!isDefault && !(agent.indexOf('macintosh') > -1)) {
+    callVoicevoxApi(text, rate, voicevoxId)
+    return
+  }
+  defaultPlay(text, rate)
+}
+
+// デフォルトの読み上げちゃんで読み上げさせる
+function defaultPlay(text, rate) {
+  if ('speechSynthesis' in window) {
+    console.log('defaultPlay')
+    // 発言を設定
+    const uttr = new SpeechSynthesisUtterance()
+    uttr.text = text
+    uttr.volume = 0.025 * mainVolumeInt * iOSVoiceVolumeInt
+    uttr.rate = rate
+    let isVoiced = false
+    console.log('Voice準備')
+    if(isVoiced) { return }
+    var voices = speechSynthesis.getVoices();
+    voices.forEach(function (v, i) {
+      if (v.name == 'Google 日本語') uttr.voice = v;
+      if (v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
+    });
+    // 発言を再生
+    console.log(uttr.text)
+    window.speechSynthesis.speak(uttr);
+    isVoiced = true
+    // 話し終わった場合
+    uttr.onend = function () {
+      isVoice = false
+    }
+    return
+  } else {
+    alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
+  }
+}
+
+let isVoice = false
+// VOICEVOXを使用して読み上げさせる
+async function callVoicevoxApi(text, rate, voiceId) {
+  console.log('送信テキスト' + text)
+  const res = await fetch(`https://api.tts.quest/v3/voicevox/synthesis?speaker=${voiceId}&text=${text}&key=e_A02-5-6810980`)
+  const json = await res.json()
+  console.log(json.mp3DownloadUrl)
+  let retryCount = 0
+  // 1秒ごとに読み込んでもエラーが出なくなったら再生する。
+  let timerid = setInterval(async () => {
+    const status = await fetch(json.audioStatusUrl)
+    const jsonStatus = await status.json()
+    console.log(jsonStatus.isAudioReady)
+    // 正常に読み込めた場合
+    if (jsonStatus.isAudioReady) {
+      const music = new Audio()
+      music.src = json.mp3DownloadUrl
+      music.volume = 0.05 * mainVolumeInt
+      music.playbackRate = rate
+      music.play()
+      music.addEventListener("ended", (event) => {
+        console.log('VOICEVOX再生完了')
+        isVoice = false
+      });
+      clearInterval(timerid)
+    }
+    retryCount++
+    if (retryCount >= 30) {
+      isVoice = false
+      console.error("リトライ回数が30回を超えたため、処理を中止します");
+      clearInterval(timerid);
+    }
+  }
+    , 1000); //1秒ごとに繰り返す
+};
+
 function mainProcess() {
   //監視する要素の指定
   var element = document.querySelector('#comment_show_area')
@@ -101,105 +240,11 @@ function mainProcess() {
   var element_star = document.querySelector('#room_prop .prop_block:last-of-type span')
   var element_timer = document.querySelector('#timer p span')
 
-  let koeUserNameArray = ['キラ', 'rico'];
-  let userVoiceArray = [];
-  let nonCommentCounter = 0;
-  const nonCommentArray = ['ずんだもんは暇なのだ', '誰か、ずんだもんの相手をしてほしいのだ', 'もしもーし。ずんだもんなのだ。'];
-
   // 発声練習
   let uttr = new SpeechSynthesisUtterance()
   uttr.text = ''
   uttr.volume = 0
   window.speechSynthesis.speak(uttr);
-
-  // *********
-  // Utils関数
-  // *********
-
-  // JavaScriptの処理を指定ミリ秒中断させる
-  function sleep(waitMsec) {
-    var startMsec = new Date();
-    // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
-    while (new Date() - startMsec < waitMsec);
-  }
-
-  // 読み上げ内容を連想配列に設定する
-  function setVoice(isDefault, text, rate, voicevoxId = '') {
-    isVoice = true
-    console.log('setVoice' + text)
-    if (!isDefault && !(agent.indexOf('macintosh') > -1)) {
-      callVoicevoxApi(text, rate, voicevoxId)
-      return
-    }
-    defaultPlay(text, rate)
-  }
-
-  // デフォルトの読み上げちゃんで読み上げさせる
-  function defaultPlay(text, rate) {
-    if ('speechSynthesis' in window) {
-      console.log('defaultPlay')
-      // 発言を設定
-      const uttr = new SpeechSynthesisUtterance()
-      uttr.text = text
-      uttr.volume = 0.025 * mainVolumeInt * iOSVoiceVolumeInt
-      uttr.rate = rate
-      let isVoiced = false
-      console.log('Voice準備')
-      if(isVoiced) { return }
-      var voices = speechSynthesis.getVoices();
-      voices.forEach(function (v, i) {
-        if (v.name == 'Google 日本語') uttr.voice = v;
-        if (v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
-      });
-      // 発言を再生
-      console.log(uttr.text)
-      window.speechSynthesis.speak(uttr);
-      isVoiced = true
-      // 話し終わった場合
-      uttr.onend = function () {
-        isVoice = false
-      }
-      return
-    } else {
-      alert('大変申し訳ありません。このブラウザは音声合成に対応していません。')
-    }
-  }
-
-  let isVoice = false
-  // VOICEVOXを使用して読み上げさせる
-  async function callVoicevoxApi(text, rate, voiceId) {
-    console.log('送信テキスト' + text)
-    const res = await fetch(`https://api.tts.quest/v3/voicevox/synthesis?speaker=${voiceId}&text=${text}&key=e_A02-5-6810980`)
-    const json = await res.json()
-    console.log(json.mp3DownloadUrl)
-    let retryCount = 0
-    // 1秒ごとに読み込んでもエラーが出なくなったら再生する。
-    let timerid = setInterval(async () => {
-      const status = await fetch(json.audioStatusUrl)
-      const jsonStatus = await status.json()
-      console.log(jsonStatus.isAudioReady)
-      // 正常に読み込めた場合
-      if (jsonStatus.isAudioReady) {
-        const music = new Audio()
-        music.src = json.mp3DownloadUrl
-        music.volume = 0.05 * mainVolumeInt
-        music.playbackRate = rate
-        music.play()
-        music.addEventListener("ended", (event) => {
-          console.log('VOICEVOX再生完了')
-          isVoice = false
-        });
-        clearInterval(timerid)
-      }
-      retryCount++
-      if (retryCount >= 30) {
-        isVoice = false
-        console.error("リトライ回数が30回を超えたため、処理を中止します");
-        clearInterval(timerid);
-      }
-    }
-      , 1000); //1秒ごとに繰り返す
-  };
 
   //MutationObserver（インスタンス）の作成
   var mo = new MutationObserver(function () {
@@ -419,6 +464,7 @@ function mainProcess() {
       bgm.loop = true
       bgm.play()
       isBGM = true
+      console.log('BGMの再生を開始')
     } else if (isEnd) {
       console.log('まもなく配信終了となります。')
       // BGMフェードアウト
@@ -474,6 +520,7 @@ function mainProcess() {
   // 読み上げ内容があるかどうか1秒ごとに監視
   let timerid = setInterval(async () => {
     if (isVoice) { return }
+    if (!isAutoVoice) { return }
     // Voice配列にデータが存在する場合
     if (userVoiceArray.length > 0) {
       const isDefault = userVoiceArray[0][0]

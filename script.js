@@ -201,7 +201,7 @@ let isVoice = false
 // VOICEVOXを使用して読み上げさせる
 async function callVoicevoxApi(text, rate, voiceId) {
   console.log('送信テキスト' + text)
-  const res = await fetch(`https://api.tts.quest/v3/voicevox/synthesis?speaker=${voiceId}&text=${text}&key=e_A02-5-6810980`)
+  const res = await fetch(`https://api.tts.quest/v3/voicevox/synthesis?speaker=${voiceId}&text=${text}`)
   const json = await res.json()
   console.log(json.mp3DownloadUrl)
   let retryCount = 0

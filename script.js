@@ -10,7 +10,7 @@ font_link_element.href = 'https://fonts.googleapis.com/css2?family=Kosugi+Maru&d
 font_link_element.rel = 'stylesheet'
 document.querySelector('head').appendChild(font_link_element);
 
-let koeUserNameArray = ['キラ', 'rico'];
+let koeUserNameArray = ['キラ', 'rico', 'あおにゃ'];
 let userVoiceArray = [];
 let nonCommentCounter = 0;
 const nonCommentArray = ['ずんだもんは暇なのだ', '誰か、ずんだもんの相手をしてほしいのだ', 'もしもーし。ずんだもんなのだ。'];
@@ -260,7 +260,7 @@ function mainProcess() {
     const name = text.match(/\d+\.\s(.+?):/)[1];
     // 「読み上げ再開」が含まれていた場合、再び読み上げられないようにする。
     if (text.indexOf('読み上げ再開') !== -1 || text.indexOf('読上げ再開') !== -1 || text.indexOf('読上再開') !== -1) {
-      // 読み上げ再開の人のUserIDを取得して配列から削除する
+      // 読み上げ再開の人のUserNameを取得して配列から削除する
       koeUserNameArray = koeUserNameArray.filter(function (userName) {
         return userName !== name;
       });
@@ -274,8 +274,9 @@ function mainProcess() {
     }
     // 読み上げ不要ユーザーの場合は最初から読み上げないようにする
     let isNotRead = false
-    koeUserNameArray.forEach(function (userId) {
-      if (userId == name) {
+    koeUserNameArray.forEach(function (userName) {
+      if (userName == name) {
+        console.log('読み上げ不要ユーザーを検知しました。')
         isNotRead = true
         return
       }

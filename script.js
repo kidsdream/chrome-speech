@@ -33,6 +33,15 @@ if (agent.indexOf('iphone') > -1 || agent.indexOf('macintosh') > -1) {
   iOSVoiceVolumeInt = 100
 }
 
+// ヘッダータイトル変更
+let header_title = document.querySelector('h1')
+console.log(header_title)
+header_title.textContent = "LIVE配信"
+
+// 魔改造エリア追加
+let main_area = document.querySelector('#main')
+main_area.insertAdjacentHTML('beforeend', '<div id="voice_area"/>');
+
 // 配信開始ボタン追加
 let start_str_element = document.createElement('span');
 start_str_element.textContent = '読み上げツール起動'
@@ -45,10 +54,10 @@ start_btn_input_element.type = 'checkbox'
 let start_btn_label_element = document.createElement('label');
 start_btn_label_element.for = 'cast_start'
 start_btn_label_element.className = 'toggle_label'
-document.querySelector('#header').appendChild(start_str_element);
+document.querySelector('#voice_area').appendChild(start_str_element);
 start_btn_div_element.appendChild(start_btn_input_element);
 start_btn_div_element.appendChild(start_btn_label_element);
-document.querySelector('#header').appendChild(start_btn_div_element);
+document.querySelector('#voice_area').appendChild(start_btn_div_element);
 
 document.querySelector('#cast_start').addEventListener('change', castStart);
 function castStart() {
@@ -61,7 +70,7 @@ function castStart() {
 // 自動読み上げ
 let voice_str_element = document.createElement('span');
 voice_str_element.textContent = '自動読み上げ'
-document.querySelector('#header').appendChild(voice_str_element);
+document.querySelector('#voice_area').appendChild(voice_str_element);
 let voice_btn_div_element = document.createElement('div');
 voice_btn_div_element.className = 'toggle_button'
 let voice_btn_input_element = document.createElement('input');
@@ -72,10 +81,10 @@ voice_btn_input_element.checked = 'true'
 let voice_btn_label_element = document.createElement('label');
 voice_btn_label_element.for = 'auto_voice'
 voice_btn_label_element.className = 'toggle_label'
-document.querySelector('#header').appendChild(voice_str_element);
+document.querySelector('#voice_area').appendChild(voice_str_element);
 voice_btn_div_element.appendChild(voice_btn_input_element);
 voice_btn_div_element.appendChild(voice_btn_label_element);
-document.querySelector('#header').appendChild(voice_btn_div_element);
+document.querySelector('#voice_area').appendChild(voice_btn_div_element);
 
 let isAutoVoice = true
 // 自動読み上げボタン切り替え処理
@@ -95,7 +104,7 @@ let init_voice_btn_input_element = document.createElement('input');
 init_voice_btn_input_element.id = 'init_voice'
 init_voice_btn_input_element.type = 'button'
 init_voice_btn_input_element.value = '配信開始時ボイス'
-document.querySelector('#header').appendChild(init_voice_btn_input_element);
+document.querySelector('#voice_area').appendChild(init_voice_btn_input_element);
 document.querySelector('#init_voice').addEventListener('click', initVoice);
 
 // 配信開始時のボイス
@@ -127,7 +136,7 @@ let next_voice_btn_input_element = document.createElement('input');
 next_voice_btn_input_element.id = 'next_voice'
 next_voice_btn_input_element.type = 'button'
 next_voice_btn_input_element.value = '次のボイスへ'
-document.querySelector('#header').appendChild(next_voice_btn_input_element);
+document.querySelector('#voice_area').appendChild(next_voice_btn_input_element);
 document.querySelector('#next_voice').addEventListener('click', nextVoice);
 
 function nextVoice() {

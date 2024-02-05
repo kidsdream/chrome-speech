@@ -1,10 +1,43 @@
 body {
-  background-color: gray !important;
+  background-color: #2e2e2e !important;
   font-family: "Kosugi Maru", sans-serif !important;
 }
 
 #header {
-  background-color: pink !important;
+  background-color: #1c1c1c !important;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+#footer {
+  display: none !important;
+}
+
+#init_voice, #next_voice {
+  display: block;
+  padding: 8px 16px;
+  margin: 16px 0;
+  background-color: #333;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+}
+
+/* 広告削除 */
+#ad_area {
+  display: none !important;
+}
+.sp_live_ad {
+  display: none !important;
+}
+
+#player_info {
+  display: none !important;
+}
+
+#tutorial {
+  display: none !important;
 }
 
 /* 配信開始ボタン */
@@ -56,5 +89,88 @@ body {
   position: relative;
   width: 75px;
   height: 35px;
-  margin: auto;
+  margin-bottom: 24px;
+}
+/* 配信開始ボタンここまで */
+
+@media screen and (min-width: 768px) {
+  h1 {
+    margin-left: 8px !important;
+  }
+
+  #main {
+    margin: 0 !important;
+    padding: 12px !important;
+    border-radius: 16px;
+    margin-top: 8px !important;
+    margin-left: 8px !important;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+  }
+
+  .contents {
+    border-top: none !important;
+  }
+
+  #play_area {
+    visibility: hidden;
+    height: 0 !important;
+    padding: 0 !important;
+  }
+
+  #play_area img {
+    visibility: visible;
+    position: absolute;
+    z-index: 10;
+    bottom: 12px;
+    right: 24px;
+    width: 120px;
+    height: 120px;
+    background-color: #fff;
+    stroke: #4bd865;
+    border-radius: 4px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+  }
+
+  #comment_header_area {
+    visibility: hidden;
+    height: 0 !important;
+    padding: 0 !important;
+  }
+  #comment_header_area input {
+    visibility: visible;
+    position: absolute;
+    z-index: 10;
+    bottom: 12px;
+    left: 24px;
+    width: 180px;
+    height: 40px;
+    background-color: #333;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+  }
+
+  #comment_show_area {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    height: 96vh;
+    width: 40vw;
+    padding: 8px;
+    background-color: #ececec;
+    border-radius: 16px;
+    overflow-y: scroll;
+  }
+
+  #comment_show_area div {
+    border-bottom: none !important;
+    padding: 8px !important;
+    margin: 8px 0;
+    background-color: #fff;
+    box-shadow: 0px 10px 15px 0px rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
 }

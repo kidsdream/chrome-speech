@@ -266,8 +266,9 @@ function mainProcess() {
     let getText = document.querySelector('.column p').innerText
     // トリップ削除
     let text = getText.replace(/◆.*:/, ':')
+    console.log('トリップ削除後:' + text)
     // コメ番読み上げ削除
-    text = getText.replace(/^(\d+\.\s)/, ':')
+    text = text.replace(/^(\d+\.\s)/, ':')
     const name = text.match(/:(.*?):/)[1];
     console.log('text:' + text)
     console.log('name:' + name)

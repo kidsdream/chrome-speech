@@ -12,7 +12,7 @@ body {
   display: none !important;
 }
 
-#init_voice, #next_voice {
+#init_voice, #next_voice, #bgm_reset {
   display: block;
   padding: 8px 16px;
   margin: 16px 0;

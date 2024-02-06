@@ -14,6 +14,7 @@ let koeUserNameArray = ['キラ', 'きら', 'rico'];
 let userVoiceArray = [];
 let nonCommentCounter = 0;
 const nonCommentArray = ['ずんだもんは暇なのだ', '誰か、ずんだもんの相手をしてほしいのだ', 'もしもーし。ずんだもんなのだ。'];
+const bgm = new Audio();
 
 // 現在日時
 const nowDate = new Date();
@@ -151,6 +152,20 @@ function nextVoice() {
     // 読み上げるVoice配列の削除
     userVoiceArray.shift()
   }
+}
+
+// BGMリセットボタン設定
+let bgm_reset_btn_input_element = document.createElement('input');
+bgm_reset_btn_input_element.id = 'bgm_reset'
+bgm_reset_btn_input_element.type = 'button'
+bgm_reset_btn_input_element.value = 'BGMリセット'
+document.querySelector('#voice_area').appendChild(bgm_reset_btn_input_element);
+document.querySelector('#bgm_reset').addEventListener('click', bgmReset);
+
+function bgmReset() {
+  bgm.pause();
+  bgm.play();
+  console.log('BGMリセット完了')
 }
 
 // *********
@@ -448,7 +463,6 @@ function mainProcess() {
   let isEnd = false
   let isEnding = false
   let isEindingVoice = false
-  const bgm = new Audio();
   // タイマー検知
   //MutationObserver（インスタンス）の作成
   var mo_timer = new MutationObserver(function () {

@@ -310,6 +310,11 @@ function mainProcess() {
         return
       }
     })
+    // URLが含まれている場合も読み上げないようにする
+    if (text.indexOf('http') !== -1) {
+      console.log('URLを検知しました。')
+      isNotRead = true
+    }
     if (isNotRead) {
       const music = new Audio();
       music.src = "https://soundeffect-lab.info/sound/button/mp3/cursor9.mp3"

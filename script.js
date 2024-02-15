@@ -488,12 +488,12 @@ function mainProcess() {
       } else if (nowDate.getHours() >= 12 && nowDate.getHours() <= 17) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/212_long_BPM132.mp3"
         bgm.volume = 0.01 * mainVolumeInt * iOSMusicVolumeInt
-      } else if (nowDate.getHours() >= 18 && nowDate.getHours() <= 21) {
+      } else if (nowDate.getHours() >= 18 && nowDate.getHours() <= 24) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/296_long_BPM85.mp3"
         bgm.volume = 0.02 * mainVolumeInt * iOSMusicVolumeInt
       } else {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M19_MusicBox_long_BPM78-55.mp3"
-        bgm.volume = 0.065 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.055 * mainVolumeInt * iOSMusicVolumeInt
       }
       bgm.loop = true
       bgm.play()

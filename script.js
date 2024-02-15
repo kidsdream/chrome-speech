@@ -493,7 +493,7 @@ function mainProcess() {
         bgm.volume = 0.02 * mainVolumeInt * iOSMusicVolumeInt
       } else {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M19_MusicBox_long_BPM78-55.mp3"
-        bgm.volume = 0.07 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.065 * mainVolumeInt * iOSMusicVolumeInt
       }
       bgm.loop = true
       bgm.play()

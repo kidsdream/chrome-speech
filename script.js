@@ -487,7 +487,7 @@ function mainProcess() {
         bgm.volume = 0.015 * mainVolumeInt * iOSMusicVolumeInt
       } else if (nowDate.getHours() >= 12 && nowDate.getHours() <= 17) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/212_long_BPM132.mp3"
-        bgm.volume = 0.01 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.007 * mainVolumeInt * iOSMusicVolumeInt
       } else if (nowDate.getHours() >= 18 && nowDate.getHours() <= 24) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/296_long_BPM85.mp3"
         bgm.volume = 0.02 * mainVolumeInt * iOSMusicVolumeInt

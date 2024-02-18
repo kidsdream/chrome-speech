@@ -572,6 +572,7 @@ function mainProcess() {
       isBGM = true
       console.log('BGMの再生を開始')
     } else if (isBGMChange && !isEnd) {
+      isBGMChange = false
       console.log('BGM切り替え')
       userVoiceArray.push([true, `【時報です。】ただいま${letHours}時になりました。`, 1, ''])
       // BGMフェードアウト
@@ -582,14 +583,13 @@ function mainProcess() {
           bgm.pause();
           clearInterval(timerid);  //タイマー解除
           isBGM = false
-          isBGMChange = false
         }
         // 0.1ずつボリュームを減らしていく
         else {
           bgm.volume -= 0.001;
         }
       }
-        , 100); //0.1秒ごとに繰り返す
+      , 100); //0.1秒ごとに繰り返す
     } else if (isEnd) {
       console.log('まもなく配信終了となります。')
       // BGMフェードアウト

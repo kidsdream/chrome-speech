@@ -468,29 +468,101 @@ function mainProcess() {
   let isEnd = false
   let isEnding = false
   let isEindingVoice = false
+  let letHours = nowDate.getHours()
+  let isBGMChange = false
   // タイマー検知
   //MutationObserver（インスタンス）の作成
   var mo_timer = new MutationObserver(function () {
-    nonCommentCounter++
-    // ずんだもんの独り言
-    if (nonCommentCounter >= 600) {
-      const text = nonCommentArray[Math.floor(Math.random() * nonCommentArray.length)]
-      console.log('ずんだもんの独り言' + text)
-      userVoiceArray.push([false, text, 1, 3])
-      nonCommentCounter = 0
+    // TODO: あまり必要性を感じなかったので一旦不要
+    // nonCommentCounter++
+    // ずんだもんの独り言機能
+    // if (nonCommentCounter >= 600) {
+    //   const text = nonCommentArray[Math.floor(Math.random() * nonCommentArray.length)]
+    //   console.log('ずんだもんの独り言' + text)
+    //   userVoiceArray.push([false, text, 1, 3])
+    //   nonCommentCounter = 0
+    // }
+    const nowDate = new Date();
+    const nowHours = nowDate.getHours()
+    if (letHours != nowHours) {
+      isBGMChange = true
+      letHours = nowHours
     }
     if (!isBGM) {
       // 枠開始時用設定
       // 枠の自動選曲機能
-      if (nowDate.getHours() >= 9 && nowDate.getHours() <= 11) {
-        bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/209_long_BPM80.mp3"
-        bgm.volume = 0.015 * mainVolumeInt * iOSMusicVolumeInt
-      } else if (nowDate.getHours() >= 12 && nowDate.getHours() <= 17) {
+      if (nowDate.getHours() == 0) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M15_MusicBox_long_BPM92.mp3"
+        bgm.volume = 0.04 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 1) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M20_Marimba_long_BPM80-65.mp3"
+        bgm.volume = 0.07 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 2) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M13_Harp_long_BPM73.mp3"
+        bgm.volume = 0.06 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 3) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M14_Harp_long_BPM72.mp3"
+        bgm.volume = 0.07 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 4) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/287_long_BPM95.mp3"
+        bgm.volume = 0.008 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 5) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/212_long_BPM132.mp3"
+        bgm.volume = 0.006 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 6) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/210_long_BPM105.mp3"
+        bgm.volume = 0.018 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 7) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/216_long_BPM65.mp3"
+        bgm.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 8) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/209_long_BPM80.mp3"
+        bgm.volume = 0.008 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 9) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/239_long_BPM88.mp3"
+        bgm.volume = 0.006 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 10) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/340_long_BPM80.mp3"
         bgm.volume = 0.007 * mainVolumeInt * iOSMusicVolumeInt
-      } else if (nowDate.getHours() >= 18 && nowDate.getHours() <= 24) {
+      } else if (nowDate.getHours() == 11) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/284_long_BPM120.mp3"
+        bgm.volume = 0.007 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 12) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2021/05/063_long_BPM204.mp3"
+        bgm.volume = 0.007 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 13) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/271_long_BPM110.mp3"
+        bgm.volume = 0.006 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 14) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/243_long_BPM181.mp3"
+        bgm.volume = 0.005 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 15) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/277_long_BPM120.mp3"
+        bgm.volume = 0.006 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 16) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2021/09/149_long_BPM100.mp3"
+        bgm.volume = 0.006 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 17) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/294_long_BPM88.mp3"
+        bgm.volume = 0.009 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 18) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/65_BPM93_LONG.mp3"
+        bgm.volume = 0.01 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 19) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/297_long_BPM85.mp3"
+        bgm.volume = 0.007 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 20) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2024/02/420_long_BPM108.mp3"
+        bgm.volume = 0.005 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 21) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/LT098_LONG.mp3"
+        bgm.volume = 0.007 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 22) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/296_long_BPM85.mp3"
-        bgm.volume = 0.02 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.018 * mainVolumeInt * iOSMusicVolumeInt
+      } else if (nowDate.getHours() == 23) {
+        bgm.src = "https://bgmer.net/wp-content/uploads/2024/02/LT101_BPM90_LONG.mp3"
+        bgm.volume = 0.011 * mainVolumeInt * iOSMusicVolumeInt
       } else {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M19_MusicBox_long_BPM78-55.mp3"
         bgm.volume = 0.055 * mainVolumeInt * iOSMusicVolumeInt
@@ -499,6 +571,25 @@ function mainProcess() {
       bgm.play()
       isBGM = true
       console.log('BGMの再生を開始')
+    } else if (isBGMChange && !isEnd) {
+      console.log('BGM切り替え')
+      userVoiceArray.push([true, `ただいま大体${letHours}時くらいになりました。`, 1, ''])
+      // BGMフェードアウト
+      let timerid = setInterval(() => {
+        // ボリュームが0になったら終了
+        if (bgm.volume <= 0.001) {
+          bgm.volume = 0;
+          bgm.pause();
+          clearInterval(timerid);  //タイマー解除
+          isBGM = false
+          isBGMChange = false
+        }
+        // 0.1ずつボリュームを減らしていく
+        else {
+          bgm.volume -= 0.001;
+        }
+      }
+        , 100); //0.1秒ごとに繰り返す
     } else if (isEnd) {
       console.log('まもなく配信終了となります。')
       // BGMフェードアウト

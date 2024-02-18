@@ -573,7 +573,7 @@ function mainProcess() {
       console.log('BGMの再生を開始')
     } else if (isBGMChange && !isEnd) {
       console.log('BGM切り替え')
-      userVoiceArray.push([true, `ただいま大体${letHours}時くらいになりました。`, 1, ''])
+      userVoiceArray.push([true, `【時報です。】ただいま${letHours}時になりました。`, 1, ''])
       // BGMフェードアウト
       let timerid = setInterval(() => {
         // ボリュームが0になったら終了

@@ -24,6 +24,11 @@ const nowDateString = (nowDate.getMonth() + 1) + "月" + nowDate.getDate() + "�
 let mainVolumeInt = 10
 let iOSMusicVolumeInt = 1
 let iOSVoiceVolumeInt = 1
+let midnightVolumeInt = 1
+// 深夜時間帯の音量縮小
+if (nowDate.getHours() >= 0 && nowDate.getHours() <= 7) {
+  midnightVolumeInt = 0.3
+}
 // Edgeからの場合はループバックさせるため音量を下げておく
 if (agent.indexOf('edg') > -1) {
   mainVolumeInt = 1
@@ -116,7 +121,7 @@ function initVoice() {
   // *********
   let uttr = new SpeechSynthesisUtterance()
   uttr.text = '配信を開始しました。' + nowDateString + 'からの配信です。'
-  uttr.volume = 0.03 * mainVolumeInt
+  uttr.volume = 0.03 * mainVolumeInt * midnightVolumeInt
   let isVoiced = false
   speechSynthesis.addEventListener('voiceschanged', e => {
     if(isVoiced) { return }
@@ -197,7 +202,7 @@ function defaultPlay(text, rate) {
     // 発言を設定
     const uttr = new SpeechSynthesisUtterance()
     uttr.text = text
-    uttr.volume = 0.025 * mainVolumeInt * iOSVoiceVolumeInt
+    uttr.volume = 0.025 * mainVolumeInt * iOSVoiceVolumeInt * midnightVolumeInt
     uttr.rate = rate
     let isVoiced = false
     console.log('Voice準備')
@@ -238,7 +243,7 @@ async function callVoicevoxApi(text, rate, voiceId) {
     if (jsonStatus.isAudioReady) {
       const music = new Audio()
       music.src = json.mp3DownloadUrl
-      music.volume = 0.05 * mainVolumeInt
+      music.volume = 0.05 * mainVolumeInt * midnightVolumeInt
       music.playbackRate = rate
       music.play()
       music.addEventListener("ended", (event) => {
@@ -457,7 +462,7 @@ function mainProcess() {
     } else if (star < document.querySelector('#room_prop .prop_block:last-of-type span').innerHTML) {
       const music = new Audio();
       music.src = "https://soundeffect-lab.info/sound/anime/mp3/pa1.mp3"
-      music.volume = 0.09 * mainVolumeInt
+      music.volume = 0.09 * mainVolumeInt * midnightVolumeInt
       music.play();
       console.log('いいねをいただきました。')
     }
@@ -603,7 +608,7 @@ function mainProcess() {
           // エンディングソング
           const music = new Audio();
           music.src = "https://bgmer.net/wp-content/uploads/2021/12/206_long_BPM172.mp3"
-          music.volume = 0.035 * mainVolumeInt * iOSMusicVolumeInt
+          music.volume = 0.025 * mainVolumeInt * iOSMusicVolumeInt
           music.loop = true
           music.play()
           isEnding = true

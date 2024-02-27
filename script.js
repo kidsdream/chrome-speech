@@ -328,6 +328,16 @@ function mainProcess() {
       return
     }
 
+    let rate = 1
+    // 早口
+    if (text.indexOf('早口') !== -1 || text.indexOf('はやくち') !== -1) {
+      rate = 2
+    }
+    // ゆっくり
+    if (text.indexOf('ゆっくり') !== -1) {
+      rate = 0.5
+    }
+
     // VOICEVOX機能
     if (text.indexOf('ずんだもん') !== -1) {
       let voiceCommand = 3
@@ -360,71 +370,145 @@ function mainProcess() {
       if (text.indexOf('涙目') !== -1) {
         voiceCommand = 76
       }
-      // 早口
-      if (text.indexOf('早口') !== -1 || text.indexOf('はやくち') !== -1) {
-        rate = 2
-      }
-      // ゆっくり
-      if (text.indexOf('ゆっくり') !== -1) {
-        rate = 0.5
-      }
       userVoiceArray.push([false, text, rate, voiceCommand])
       return
     }
     if (text.indexOf('四国めたん') !== -1) {
-      // 早口
-      if (text.indexOf('早口') !== -1 || text.indexOf('はやくち') !== -1) {
-        userVoiceArray.push([false, text, 2, 2])
-        return
+      let voiceCommand = 2
+      let rate = 1
+      // あまあま
+      if (text.indexOf('甘々') !== -1 || text.indexOf('あまあま') !== -1 || text.indexOf('好き') !== -1 || text.indexOf('すき') !== -1) {
+        voiceCommand = 0
       }
-      // ゆっくり
-      if (text.indexOf('ゆっくり') !== -1) {
-        userVoiceArray.push([false, text, 0.5, 2])
-        return
+      // セクシー
+      if (text.indexOf('セクシー') !== -1 || text.indexOf('あぁん') !== -1 || text.indexOf('えっち') !== -1 || text.indexOf('エッチ') !== -1) {
+        voiceCommand = 4
       }
-      userVoiceArray.push([false, text, 1, 2])
+      // ツンツン
+      if (text.indexOf('だからね') !== -1 || text.indexOf('ツンツン') !== -1 || text.indexOf('怒') !== -1) {
+        voiceCommand = 6
+      }
+      // ささやき
+      if (text.indexOf('囁') !== -1 || text.indexOf('ささや') !== -1 || text.indexOf('ひっそり') !== -1) {
+        voiceCommand = 36
+      }
+      // ヒソヒソ
+      if (text.indexOf('ヒソヒソ') !== -1 || text.indexOf('こっそり') !== -1) {
+        voiceCommand = 37
+      }
+      userVoiceArray.push([false, text, rate, voiceCommand])
       return
     }
     if (text.indexOf('春日部つむぎ') !== -1) {
-      // 早口
-      if (text.indexOf('早口') !== -1 || text.indexOf('はやくち') !== -1) {
-        userVoiceArray.push([false, text, 2, 8])
-        return
-      }
-      // ゆっくり
-      if (text.indexOf('ゆっくり') !== -1) {
-        userVoiceArray.push([false, text, 0.5, 8])
-        return
-      }
-      userVoiceArray.push([false, text, 1, 8])
+      userVoiceArray.push([false, text, rate, 8])
       return
     }
     if (text.indexOf('波音リツ') !== -1) {
-      // 早口
-      if (text.indexOf('早口') !== -1 || text.indexOf('はやくち') !== -1) {
-        userVoiceArray.push([false, text, 2, 9])
-        return
-      }
-      // ゆっくり
-      if (text.indexOf('ゆっくり') !== -1) {
-        userVoiceArray.push([false, text, 0.5, 9])
-        return
-      }
-      userVoiceArray.push([false, text, 1, 9])
+      userVoiceArray.push([false, text, rate, 9])
+      return
+    }
+    if (text.indexOf('雨晴はう') !== -1) {
+      userVoiceArray.push([false, text, rate, 10])
+      return
+    }
+    if (text.indexOf('玄野武宏') !== -1) {
+      userVoiceArray.push([false, text, rate, 11])
+      return
+    }
+    if (text.indexOf('白上虎太郎') !== -1) {
+      userVoiceArray.push([false, text, rate, 12])
+      return
+    }
+    if (text.indexOf('青山龍星') !== -1) {
+      userVoiceArray.push([false, text, rate, 13])
+      return
+    }
+    if (text.indexOf('九州そら') !== -1) {
+      userVoiceArray.push([false, text, rate, 16])
+      return
+    }
+    if (text.indexOf('もち子') !== -1) {
+      userVoiceArray.push([false, text, rate, 20])
+      return
+    }
+    if (text.indexOf('剣崎雌雄') !== -1) {
+      userVoiceArray.push([false, text, rate, 21])
+      return
+    }
+    if (text.indexOf('WhiteCUL') !== -1) {
+      userVoiceArray.push([false, text, rate, 23])
+      return
+    }
+    if (text.indexOf('後鬼') !== -1) {
+      userVoiceArray.push([false, text, rate, 27])
+      return
+    }
+    if (text.indexOf('No.7') !== -1) {
+      userVoiceArray.push([false, text, rate, 29])
+      return
+    }
+    if (text.indexOf('ちび式じい') !== -1) {
+      userVoiceArray.push([false, text, rate, 42])
+      return
+    }
+    if (text.indexOf('櫻歌ミコ') !== -1) {
+      userVoiceArray.push([false, text, rate, 43])
+      return
+    }
+    if (text.indexOf('小夜') !== -1) {
+      userVoiceArray.push([false, text, rate, 46])
+      return
+    }
+    if (text.indexOf('ナースロボ') !== -1) {
+      userVoiceArray.push([false, text, rate, 47])
+      return
+    }
+    if (text.indexOf('紅桜') !== -1) {
+      userVoiceArray.push([false, text, rate, 51])
+      return
+    }
+    if (text.indexOf('雀松朱司') !== -1) {
+      userVoiceArray.push([false, text, rate, 52])
+      return
+    }
+    if (text.indexOf('麒ヶ島宗麟') !== -1) {
+      userVoiceArray.push([false, text, rate, 53])
+      return
+    }
+    if (text.indexOf('春歌ナナ') !== -1) {
+      userVoiceArray.push([false, text, rate, 54])
+      return
+    }
+    if (text.indexOf('猫使アル') !== -1) {
+      userVoiceArray.push([false, text, rate, 55])
+      return
+    }
+    if (text.indexOf('猫使ビィ') !== -1) {
+      userVoiceArray.push([false, text, rate, 58])
+      return
+    }
+    if (text.indexOf('中国うさぎ') !== -1) {
+      userVoiceArray.push([false, text, rate, 51])
+      return
+    }
+    if (text.indexOf('栗田まろん') !== -1) {
+      userVoiceArray.push([false, text, rate, 67])
+      return
+    }
+    if (text.indexOf('あいえるたん') !== -1) {
+      userVoiceArray.push([false, text, rate, 68])
+      return
+    }
+    if (text.indexOf('満別花丸') !== -1) {
+      userVoiceArray.push([false, text, rate, 69])
+      return
+    }
+    if (text.indexOf('琴詠ニア') !== -1) {
+      userVoiceArray.push([false, text, rate, 74])
       return
     }
 
-    // 早口
-    if (text.indexOf('早口') !== -1 || text.indexOf('はやくち') !== -1) {
-      userVoiceArray.push([true, text, 2, ''])
-      return
-    }
-    // ゆっくり
-    if (text.indexOf('ゆっくり') !== -1) {
-      userVoiceArray.push([true, text, 0.5, ''])
-      return
-    }
-    userVoiceArray.push([true, text, 1, ''])
+    userVoiceArray.push([true, text, rate, ''])
     console.log('設定配列：' + text + 'を設定')
   })
 
@@ -608,7 +692,7 @@ function mainProcess() {
           // エンディングソング
           const music = new Audio();
           music.src = "https://bgmer.net/wp-content/uploads/2021/12/206_long_BPM172.mp3"
-          music.volume = 0.025 * mainVolumeInt * iOSMusicVolumeInt
+          music.volume = 0.015 * mainVolumeInt * iOSMusicVolumeInt
           music.loop = true
           music.play()
           isEnding = true

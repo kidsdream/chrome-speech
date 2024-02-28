@@ -341,7 +341,6 @@ function mainProcess() {
     // VOICEVOX機能
     if (text.indexOf('ずんだもん') !== -1) {
       let voiceCommand = 3
-      let rate = 1
       // あまあま
       if (text.indexOf('甘々') !== -1 || text.indexOf('あまあま') !== -1 || text.indexOf('好き') !== -1 || text.indexOf('すき') !== -1) {
         voiceCommand = 1
@@ -375,7 +374,6 @@ function mainProcess() {
     }
     if (text.indexOf('四国めたん') !== -1) {
       let voiceCommand = 2
-      let rate = 1
       // あまあま
       if (text.indexOf('甘々') !== -1 || text.indexOf('あまあま') !== -1 || text.indexOf('好き') !== -1 || text.indexOf('すき') !== -1) {
         voiceCommand = 0

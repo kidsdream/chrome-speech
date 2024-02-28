@@ -342,7 +342,7 @@ function mainProcess() {
     if (text.indexOf('ずんだもん') !== -1) {
       let voiceCommand = 3
       // あまあま
-      if (text.indexOf('甘々') !== -1 || text.indexOf('あまあま') !== -1 || text.indexOf('好き') !== -1 || text.indexOf('すき') !== -1) {
+      if (text.indexOf('甘々') !== -1 || text.indexOf('あまあま') !== -1 || text.indexOf('好き') !== -1 || text.indexOf('すき') !== -1 || text.indexOf('はあと') !== -1 || text.indexOf('♡') !== -1) {
         voiceCommand = 1
       }
       // セクシー
@@ -375,7 +375,7 @@ function mainProcess() {
     if (text.indexOf('四国めたん') !== -1) {
       let voiceCommand = 2
       // あまあま
-      if (text.indexOf('甘々') !== -1 || text.indexOf('あまあま') !== -1 || text.indexOf('好き') !== -1 || text.indexOf('すき') !== -1) {
+      if (text.indexOf('甘々') !== -1 || text.indexOf('あまあま') !== -1 || text.indexOf('好き') !== -1 || text.indexOf('すき') !== -1 || text.indexOf('はあと') !== -1 || text.indexOf('♡') !== -1) {
         voiceCommand = 0
       }
       // セクシー

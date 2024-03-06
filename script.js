@@ -269,6 +269,8 @@ function mainProcess() {
   var element_star = document.querySelector('#room_prop .prop_block:last-of-type span')
   var element_timer = document.querySelector('#timer p span')
 
+  var element_live_name = document.querySelector('#room_info_inner p')
+
   // 発声練習
   let uttr = new SpeechSynthesisUtterance()
   uttr.text = ''
@@ -292,6 +294,15 @@ function mainProcess() {
     const name = text.match(/:(.*?):/)[1];
     console.log('text:' + text)
     console.log('name:' + name)
+
+    // ログ用
+    const date = new Date();
+    const logDate = date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) + '.' + date.getMilliseconds();
+    console.log(element_live_name.innerText)
+    if (element_live_name.innerText.indexOf('あおにゃ') !== -1) {
+      sendJsonData(logDate, element_live_name.innerText, name, text)
+    }
+
     // 「読み上げ再開」が含まれていた場合、再び読み上げられないようにする。
     if (text.indexOf('読み上げ再開') !== -1 || text.indexOf('読上げ再開') !== -1 || text.indexOf('読上再開') !== -1) {
       // 読み上げ再開の人のUserNameを取得して配列から削除する
@@ -429,7 +440,7 @@ function mainProcess() {
       userVoiceArray.push([false, text, rate, 20])
       return
     }
-    if (text.indexOf('剣崎雌雄') !== -1) {
+    if (text.indexOf('剣崎雌雄') !== -1 || text.indexOf('♂') !== -1) {
       userVoiceArray.push([false, text, rate, 21])
       return
     }
@@ -458,7 +469,20 @@ function mainProcess() {
       return
     }
     if (text.indexOf('ナースロボ') !== -1) {
-      userVoiceArray.push([false, text, rate, 47])
+      let voiceCommand = 47
+      // 楽々
+      if (text.indexOf('楽々') !== -1) {
+        voiceCommand = 48
+      }
+      // 恐怖
+      if (text.indexOf('恐怖') !== -1 || text.indexOf('こわ') !== -1) {
+        voiceCommand = 49
+      }
+      // 内緒話
+      if (text.indexOf('内緒') !== -1 || text.indexOf('ヒソヒソ') !== -1 || text.indexOf('こっそり') !== -1 || text.indexOf('囁') !== -1 || text.indexOf('ささや') !== -1 || text.indexOf('ひっそり') !== -1) {
+        voiceCommand = 50
+      }
+      userVoiceArray.push([false, text, rate, voiceCommand])
       return
     }
     if (text.indexOf('紅桜') !== -1) {
@@ -631,7 +655,7 @@ function mainProcess() {
         bgm.volume = 0.006 * mainVolumeInt * iOSMusicVolumeInt
       } else if (nowDate.getHours() == 17) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/294_long_BPM88.mp3"
-        bgm.volume = 0.009 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.007 * mainVolumeInt * iOSMusicVolumeInt
       } else if (nowDate.getHours() == 18) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/65_BPM93_LONG.mp3"
         bgm.volume = 0.01 * mainVolumeInt * iOSMusicVolumeInt
@@ -744,4 +768,39 @@ function mainProcess() {
       userVoiceArray.shift()
     }
   }, 1000); //1秒ごとに繰り返す
+}
+
+/*-----------------------------
+    JSONデータを送信する
+    引数：なし
+    戻値：なし
+--------------------------------*/
+function sendJsonData(date, liveName, name, comment) {
+  console.log("sendJson")
+	// 送信するJSON
+	let data =
+    {
+      "action": "insert",
+      "sheetName": "DB",
+      "rows": [
+        {"日時": date,
+        "枠名": liveName,
+        "名前": name,
+        "コメント": comment}
+      ]
+    }
+  console.log(JSON.stringify(data))
+	// Fetch APIでデータ送信
+	fetch('https://script.google.com/macros/s/AKfycbyAzUWj6faRyJHkONwohY6AtrHWWKNPwRzoMVYYbOsPfa8QTnOeRXPHYi86MTaKrkWmyQ/exec', {
+    method: 'post', // 通信メソッド
+    mode: 'no-cors',
+    headers: {
+      'Content-Type': 'application/json', // JSON形式のデータのヘッダー
+    },
+		body: JSON.stringify(data) // JSON形式のデータ
+	})
+	.then(response => response.text())
+	.then(data => {
+		console.log(data);
+	});
 }

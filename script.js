@@ -31,7 +31,7 @@ if (nowDate.getHours() >= 0 && nowDate.getHours() <= 7) {
 }
 // Edgeからの場合はループバックさせるため音量を下げておく
 if (agent.indexOf('edg') > -1) {
-  mainVolumeInt = 1
+  mainVolumeInt = 0.9
 }
 // Edgeからの場合はループバックさせるため音量を下げておく
 if (agent.indexOf('iphone') > -1 || agent.indexOf('macintosh') > -1) {
@@ -254,7 +254,7 @@ async function callVoicevoxApi(text, rate, voiceId) {
     }
     retryCount++
     if (retryCount >= 30) {
-      isVoice = false
+      defaultPlay(text, rate)
       console.error("リトライ回数が30回を超えたため、処理を中止します");
       clearInterval(timerid);
     }
@@ -604,10 +604,10 @@ function mainProcess() {
       // 枠の自動選曲機能
       if (nowDate.getHours() == 0) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M15_MusicBox_long_BPM92.mp3"
-        bgm.volume = 0.04 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.035 * mainVolumeInt * iOSMusicVolumeInt
       } else if (nowDate.getHours() == 1) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M20_Marimba_long_BPM80-65.mp3"
-        bgm.volume = 0.07 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.06 * mainVolumeInt * iOSMusicVolumeInt
       } else if (nowDate.getHours() == 2) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M13_Harp_long_BPM73.mp3"
         bgm.volume = 0.06 * mainVolumeInt * iOSMusicVolumeInt

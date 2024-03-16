@@ -105,6 +105,38 @@ function autoVoice() {
   }
 }
 
+// 「何名様いらっしゃい」読み上げ
+let voice_people_element = document.createElement('span');
+voice_people_element.textContent = '何名様読み上げ'
+document.querySelector('#voice_area').appendChild(voice_people_element);
+let voice_people_btn_div_element = document.createElement('div');
+voice_people_btn_div_element.className = 'toggle_button'
+let voice_people_btn_input_element = document.createElement('input');
+voice_people_btn_input_element.id = 'auto_people_voice'
+voice_people_btn_input_element.className = 'toggle_input'
+voice_people_btn_input_element.type = 'checkbox'
+voice_people_btn_input_element.checked = 'true'
+let voice_people_btn_label_element = document.createElement('label');
+voice_people_btn_label_element.for = 'auto_people_voice'
+voice_people_btn_label_element.className = 'toggle_label'
+document.querySelector('#voice_area').appendChild(voice_people_element);
+voice_people_btn_div_element.appendChild(voice_people_btn_input_element);
+voice_people_btn_div_element.appendChild(voice_people_btn_label_element);
+document.querySelector('#voice_area').appendChild(voice_people_btn_div_element);
+
+let isAutoPeopleVoice = true
+// 自動読み上げボタン切り替え処理
+document.querySelector('#auto_people_voice').addEventListener('change', autoVoice);
+function autoVoice() {
+  if (!document.querySelector('#auto_people_voice').checked) {
+    console.log('何名様いらっしゃい読み上げをOFF')
+    isAutoPeopleVoice = false
+  } else {
+    console.log('何名様いらっしゃい読み上げをON')
+    isAutoPeopleVoice = true
+  }
+}
+
 // 初回ボイスボタン設定
 let init_voice_btn_input_element = document.createElement('input');
 init_voice_btn_input_element.id = 'init_voice'
@@ -545,7 +577,7 @@ function mainProcess() {
     }
     const text = document.querySelector('#room_prop .prop_block p span').innerHTML.substring(0, 2)
     if (Number(text) > 5) { return }
-    if (player < Number(text)) {
+    if (player < Number(text) && isAutoPeopleVoice) {
       userVoiceArray.push([true, `${text}名様いらっしゃい`, 1, ''])
     }
     player = Number(text)

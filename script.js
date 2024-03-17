@@ -35,8 +35,8 @@ if (agent.indexOf('edg') > -1) {
 }
 // Edgeからの場合はループバックさせるため音量を下げておく
 if (agent.indexOf('iphone') > -1 || agent.indexOf('macintosh') > -1) {
-  iOSMusicVolumeInt = 0.001
-  iOSVoiceVolumeInt = 100
+  iOSMusicVolumeInt = 0.01
+  iOSVoiceVolumeInt = 200
 }
 
 // ヘッダータイトル変更

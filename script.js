@@ -680,9 +680,9 @@ function mainProcess() {
         bgm.volume = 0.007 * mainVolumeInt * iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「口笛吹いて」です。"
       } else if (nowDate.getHours() == 13) {
-        bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/271_long_BPM110.mp3"
-        bgm.volume = 0.006 * mainVolumeInt * iOSMusicVolumeInt
-        voiceInfo = "続いての曲は、ビージーエマーより、「カラフルな生活」です。"
+        bgm.src = "https://storage.googleapis.com/koelive-project.appspot.com/%E6%9C%88%E3%81%A8%E7%8C%AB.mp3"
+        bgm.volume = 0.016 * mainVolumeInt * iOSMusicVolumeInt
+        voiceInfo = "続いての曲は、今日一さん作、「月と猫」です。"
       } else if (nowDate.getHours() == 14) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/243_long_BPM181.mp3"
         bgm.volume = 0.005 * mainVolumeInt * iOSMusicVolumeInt

@@ -13,7 +13,6 @@ document.querySelector('head').appendChild(font_link_element);
 let koeUserNameArray = ['キラ', 'きら', 'rico'];
 let userVoiceArray = [];
 let nonCommentCounter = 0;
-const nonCommentArray = ['ずんだもんは暇なのだ', '誰か、ずんだもんの相手をしてほしいのだ', 'もしもーし。ずんだもんなのだ。'];
 const bgm = new Audio();
 
 // 現在日時
@@ -858,3 +857,67 @@ function sendJsonData(date, liveName, name, comment) {
 		console.log(data);
 	});
 }
+
+/*-----------------------------
+    ポン出し機能
+--------------------------------*/
+document.querySelector('#comment_header_area input').value = `NG初期化
+1.「よ、よろしくお願いします」
+2.「もう…だめ…」
+3.「よろしくお願いしますわ」
+4.「なんだザコかあ」
+5.「か、体がいうことを…」
+6.「やるじゃないか！」
+7.ドン
+8.ドドン
+9.チーン
+`
+document.onkeydown = function (e) {
+  const se = new Audio();
+  // テンキー1
+  if (e.keyCode == 97) {
+    se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/healer-greeting1.mp3"
+    se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
+  }
+  // テンキー2
+  if (e.keyCode == 98) {
+    se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/healer-death1.mp3"
+    se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
+  }
+  // テンキー3
+  if (e.keyCode == 99) {
+    se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/witch-greeting1.mp3"
+    se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
+  }
+  // テンキー4
+  if (e.keyCode == 100) {
+    se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-start1.mp3"
+    se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
+  }
+  // テンキー5
+  if (e.keyCode == 101) {
+    se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/wizard-faint1.mp3"
+    se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
+  }
+  // テンキー6
+  if (e.keyCode == 102) {
+    se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/swordman-guard2.mp3"
+    se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
+  }
+  // テンキー7
+  if (e.keyCode == 103) {
+    se.src = "https://soundeffect-lab.info/sound/anime/mp3/drum-japanese1.mp3"
+    se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
+  }
+  // テンキー8
+  if (e.keyCode == 104) {
+    se.src = "https://soundeffect-lab.info/sound/anime/mp3/drum-japanese2.mp3"
+    se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
+  }
+  // テンキー9
+  if (e.keyCode == 105) {
+    se.src = "https://soundeffect-lab.info/sound/anime/mp3/tin1.mp3"
+    se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
+  }
+  se.play()
+};

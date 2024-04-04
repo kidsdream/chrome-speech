@@ -990,15 +990,15 @@ document.onkeydown = function (e) {
   }
   if (e.code == "Digit9") {
     pongBtnName.value = `NG初期化
-1.「よ、よろしくお願いします」
-2.「もう…だめ…」
-3.「よろしくお願いしますわ」
-4.「なんだザコかあ」
-5.「か、体がいうことを…」
-6.「やるじゃないか！」
-7.ドン
-8.ドドン
-9.チーン
+1.「絶対泣かせちゃうもんね！」
+2.「こんなの聞いてないよ！？」
+3.「なめんなよ！」
+4.「べ～だ！」
+5.「タンマ！」
+6.「うわああ！」
+7.「うわーーーー！」
+8.「ちくしょー、覚えてろよぉ！」
+9.「へへん、どうだ！」
 `
     digitNum = 9
   }
@@ -1193,197 +1193,245 @@ document.onkeydown = function (e) {
       se.src = "https://soundeffect-lab.info/sound/anime/mp3/dondonpafupafu1.mp3"
       se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
     }
-    if (digitNum == 5) {
-      // テンキー1
-      console.log(e.code)
-      if (e.code == "Numpad1") {
-        se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-nandeyanen1.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー2
-      if (e.code == "Numpad2") {
-        se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-eekagennnisenkai1.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー3
-      if (e.code == "Numpad3") {
-        se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-moueewa1.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー4
-      if (e.code == "Numpad4") {
-        se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-ookini1.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー5
-      if (e.code == "Numpad5") {
-        se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-akan1.mp3"
-        se.volume = 0.04 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー6
-      if (e.code == "Numpad6") {
-        se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-moukarimakka1.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー7
-      if (e.code == "Numpad7") {
-        se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-ee2.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー8
-      if (e.code == "Numpad8") {
-        se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-ee1.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー9
-      if (e.code == "Numpad9") {
-        se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-uu1.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
+  }
+  if (digitNum == 5) {
+    // テンキー1
+    console.log(e.code)
+    if (e.code == "Numpad1") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-nandeyanen1.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
     }
-    if (digitNum == 6) {
-      // テンキー1
-      console.log(e.code)
-      if (e.code == "Numpad1") {
-        se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-damegi1.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー2
-      if (e.code == "Numpad2") {
-        se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-damegi2.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー3
-      if (e.code == "Numpad3") {
-        se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-damegi3.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー4
-      if (e.code == "Numpad4") {
-        se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-oitahadameyo.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー5
-      if (e.code == "Numpad5") {
-        se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-okocchauzo.mp3"
-        se.volume = 0.04 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー6
-      if (e.code == "Numpad6") {
-        se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-kituinoikuwayo.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー7
-      if (e.code == "Numpad7") {
-        se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-itaikashira.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー8
-      if (e.code == "Numpad8") {
-        se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-araara2.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー9
-      if (e.code == "Numpad9") {
-        se.src = "https://blog-imgs-118.fc2.com/s/p/a/spaluna/zyosei2-issyonisaborokka.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
+    // テンキー267
+    if (e.code == "Numpad2") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-eekagennnisenkai1.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
     }
-    if (digitNum == 7) {
-      // テンキー1
-      console.log(e.code)
-      if (e.code == "Numpad1") {
-        se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-damege1.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー2
-      if (e.code == "Numpad2") {
-        se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-damege2.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー3
-      if (e.code == "Numpad3") {
-        se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-damege3.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー4
-      if (e.code == "Numpad4") {
-        se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-damege4.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー5
-      if (e.code == "Numpad5") {
-        se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-owattyauno.mp3"
-        se.volume = 0.04 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー6
-      if (e.code == "Numpad6") {
-        se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-tyottoyabaikaom.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー7
-      if (e.code == "Numpad7") {
-        se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-tyottokituiya.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー8
-      if (e.code == "Numpad8") {
-        se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-owattyauno.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー9
-      if (e.code == "Numpad9") {
-        se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-mouugokenaiya.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
+    // テンキー3
+    if (e.code == "Numpad3") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-moueewa1.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
     }
-    if (digitNum == 8) {
-      // テンキー1
-      console.log(e.code)
-      if (e.code == "Numpad1") {
-        se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-itakuhasimasennwa.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー2
-      if (e.code == "Numpad2") {
-        se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-oisiso.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー3
-      if (e.code == "Numpad3") {
-        se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-kyuuketu.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー4
-      if (e.code == "Numpad4") {
-        se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-kyuuketu2.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー5
-      if (e.code == "Numpad5") {
-        se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-kyuuketu3.mp3"
-        se.volume = 0.04 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー6
-      if (e.code == "Numpad6") {
-        se.src = "https://blog-imgs-119.fc2.com/s/p/a/spaluna/syozyo13-kimihanamagomimitaina.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー7
-      if (e.code == "Numpad7") {
-        se.src = "https://blog-imgs-119.fc2.com/s/p/a/spaluna/syozyo13-namagominya.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー8
-      if (e.code == "Numpad8") {
-        se.src = "https://blog-imgs-119.fc2.com/s/p/a/spaluna/syozyo13-he-.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
-      // テンキー9
-      if (e.code == "Numpad9") {
-        se.src = "https://blog-imgs-119.fc2.com/s/p/a/spaluna/syozyo13-haihaidomonya.mp3"
-        se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-      }
+    // テンキー4
+    if (e.code == "Numpad4") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-ookini1.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー5
+    if (e.code == "Numpad5") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-akan1.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー6
+    if (e.code == "Numpad6") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-moukarimakka1.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー7
+    if (e.code == "Numpad7") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-ee2.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー8
+    if (e.code == "Numpad8") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-ee1.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー9
+    if (e.code == "Numpad9") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-uu1.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+  }
+  if (digitNum == 6) {
+    // テンキー1
+    console.log(e.code)
+    if (e.code == "Numpad1") {
+      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-damegi1.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー2
+    if (e.code == "Numpad2") {
+      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-damegi2.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー3
+    if (e.code == "Numpad3") {
+      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-damegi3.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー4
+    if (e.code == "Numpad4") {
+      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-oitahadameyo.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー5
+    if (e.code == "Numpad5") {
+      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-okocchauzo.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー6
+    if (e.code == "Numpad6") {
+      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-kituinoikuwayo.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー7
+    if (e.code == "Numpad7") {
+      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-itaikashira.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー8
+    if (e.code == "Numpad8") {
+      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-araara2.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー9
+    if (e.code == "Numpad9") {
+      se.src = "https://blog-imgs-118.fc2.com/s/p/a/spaluna/zyosei2-issyonisaborokka.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+  }
+  if (digitNum == 7) {
+    // テンキー1
+    console.log(e.code)
+    if (e.code == "Numpad1") {
+      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-damege1.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー2
+    if (e.code == "Numpad2") {
+      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-damege2.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー3
+    if (e.code == "Numpad3") {
+      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-damege3.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー4
+    if (e.code == "Numpad4") {
+      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-damege4.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー5
+    if (e.code == "Numpad5") {
+      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-gohoubininadenade.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー6
+    if (e.code == "Numpad6") {
+      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-tyottoyabaikaom.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー7
+    if (e.code == "Numpad7") {
+      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-tyottokituiya.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー8
+    if (e.code == "Numpad8") {
+      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-owattyauno.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー9
+    if (e.code == "Numpad9") {
+      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-mouugokenaiya.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+  }
+  if (digitNum == 8) {
+    // テンキー1
+    console.log(e.code)
+    if (e.code == "Numpad1") {
+      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-itakuhasimasennwa.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー2
+    if (e.code == "Numpad2") {
+      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-oisiso.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー3
+    if (e.code == "Numpad3") {
+      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-kyuuketu.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー4
+    if (e.code == "Numpad4") {
+      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-kyuuketu2.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー5
+    if (e.code == "Numpad5") {
+      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-kyuuketu3.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー6
+    if (e.code == "Numpad6") {
+      se.src = "https://blog-imgs-119.fc2.com/s/p/a/spaluna/syozyo13-kimihanamagomimitaina.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー7
+    if (e.code == "Numpad7") {
+      se.src = "https://blog-imgs-119.fc2.com/s/p/a/spaluna/syozyo13-namagominya.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー8
+    if (e.code == "Numpad8") {
+      se.src = "https://blog-imgs-119.fc2.com/s/p/a/spaluna/syozyo13-he-.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー9
+    if (e.code == "Numpad9") {
+      se.src = "https://blog-imgs-119.fc2.com/s/p/a/spaluna/syozyo13-haihaidomonya.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+  }
+  if (digitNum == 9) {
+    // テンキー1
+    console.log(e.code)
+    if (e.code == "Numpad1") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-special2.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー2
+    if (e.code == "Numpad2") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-start2.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー3
+    if (e.code == "Numpad3") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-attack3.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー4
+    if (e.code == "Numpad4") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-guard1.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー5
+    if (e.code == "Numpad5") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-guard2.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー6
+    if (e.code == "Numpad6") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-damage2.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー7
+    if (e.code == "Numpad7") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-death1.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー8
+    if (e.code == "Numpad8") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-lose1.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
+    }
+    // テンキー9
+    if (e.code == "Numpad9") {
+      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-win1.mp3"
+      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
     }
   }
   se.play()

@@ -714,11 +714,11 @@ function mainProcess() {
         bgm.src = "https://bgmer.net/wp-content/uploads/2024/02/LT126_BPM85_LONG.mp3"
         bgm.volume = 0.012 * mainVolumeInt * iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Daryl Beat – Dimmed Serenity」です。"
-      } else if (nowDate.getHours() == 23) {
+      } else if (nowDate.getHours() == 22) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/11/58_BPM81_LONG.mp3"
         bgm.volume = 0.018 * mainVolumeInt * iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Chilled Cow – 1989」です。"
-      } else if (nowDate.getHours() == 1) {        bgm.src = "https://bgmer.net/wp-content/uploads/2024/02/LT107_BPM81_LONG.mp3"
+      } else if (nowDate.getHours() == 23) {        bgm.src = "https://bgmer.net/wp-content/uploads/2024/02/LT107_BPM81_LONG.mp3"
         bgm.volume = 0.011 * mainVolumeInt * iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Chill Zombie – Soothing Drops」です。"
       } else {

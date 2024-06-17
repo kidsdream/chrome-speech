@@ -684,7 +684,7 @@ function mainProcess() {
         voiceInfo = "続いての曲は、今日一さん作、「月と猫」です。"
       } else if (nowDate.getHours() == 14) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/230_long_BPM166.mp3"
-        bgm.volume = 0.013 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.011 * mainVolumeInt * iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「キッズキッチンカー」です。"
       } else if (nowDate.getHours() == 15) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/237_long_BPM152.mp3"

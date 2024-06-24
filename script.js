@@ -123,10 +123,10 @@ voice_people_btn_div_element.appendChild(voice_people_btn_input_element);
 voice_people_btn_div_element.appendChild(voice_people_btn_label_element);
 document.querySelector('#voice_area').appendChild(voice_people_btn_div_element);
 
-let isAutoPeopleVoice = true
+let isAutoPeopleVoice = false
 // 自動読み上げボタン切り替え処理
-document.querySelector('#auto_people_voice').addEventListener('change', autoVoice);
-function autoVoice() {
+document.querySelector('#auto_people_voice').addEventListener('change', autoPeopleVoice);
+function autoPeopleVoice() {
   if (!document.querySelector('#auto_people_voice').checked) {
     console.log('何名様いらっしゃい読み上げをOFF')
     isAutoPeopleVoice = false
@@ -684,7 +684,7 @@ function mainProcess() {
         voiceInfo = "続いての曲は、今日一さん作、「月と猫」です。"
       } else if (nowDate.getHours() == 14) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/230_long_BPM166.mp3"
-        bgm.volume = 0.011 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.009 * mainVolumeInt * iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「キッズキッチンカー」です。"
       } else if (nowDate.getHours() == 15) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/237_long_BPM152.mp3"

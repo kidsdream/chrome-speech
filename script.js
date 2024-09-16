@@ -10,7 +10,7 @@ font_link_element.href = 'https://fonts.googleapis.com/css2?family=Kosugi+Maru&d
 font_link_element.rel = 'stylesheet'
 document.querySelector('head').appendChild(font_link_element);
 
-let koeUserNameArray = ['キラ', 'きら', 'rico'];
+let koeUserNameArray = ['🐈‍⬛', 'rico'];
 let userVoiceArray = [];
 let nonCommentCounter = 0;
 const bgm = new Audio();

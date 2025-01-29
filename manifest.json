@@ -17,8 +17,17 @@
   "content_scripts": [
     {
       "matches": ["*://live.koe-koe.com/*"],
-      "js": ["script.js"],
+      "js": ["loader.js"],
       "css": ["main.css"]
     }
-  ]
+  ],
+  "web_accessible_resources": [
+    {
+        "resources": [
+            "script.js",
+            "utils.js"
+        ],
+        "matches": ["<all_urls>"]
+    }
+]
 }

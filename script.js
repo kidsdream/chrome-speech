@@ -1,4 +1,6 @@
+import { alertmessage } from "./utils.js";
 "use strict"
+
 window.addEventListener("load", main, false);
 console.log("koe-koe読み上げ機能起動準備")
 var agent = window.navigator.userAgent.toLowerCase();
@@ -10,14 +12,12 @@ font_link_element.href = 'https://fonts.googleapis.com/css2?family=Kosugi+Maru&d
 font_link_element.rel = 'stylesheet'
 document.querySelector('head').appendChild(font_link_element);
 
-let koeUserNameArray = ['🐈‍⬛', 'rico'];
+let koeUserNameArray = ['🐈‍⬛', 'キラ', 'きら'];
 let userVoiceArray = [];
-let nonCommentCounter = 0;
 const bgm = new Audio();
 
 // 現在日時
 const nowDate = new Date();
-const nowDateString = (nowDate.getMonth() + 1) + "月" + nowDate.getDate() + "日" + nowDate.getHours() + "時" + nowDate.getMinutes() + "分"
 
 // メイン音量
 let mainVolumeInt = 10
@@ -114,7 +114,6 @@ let voice_people_btn_input_element = document.createElement('input');
 voice_people_btn_input_element.id = 'auto_people_voice'
 voice_people_btn_input_element.className = 'toggle_input'
 voice_people_btn_input_element.type = 'checkbox'
-voice_people_btn_input_element.checked = 'true'
 let voice_people_btn_label_element = document.createElement('label');
 voice_people_btn_label_element.for = 'auto_people_voice'
 voice_people_btn_label_element.className = 'toggle_label'
@@ -134,38 +133,6 @@ function autoPeopleVoice() {
     console.log('何名様いらっしゃい読み上げをON')
     isAutoPeopleVoice = true
   }
-}
-
-// 初回ボイスボタン設定
-let init_voice_btn_input_element = document.createElement('input');
-init_voice_btn_input_element.id = 'init_voice'
-init_voice_btn_input_element.type = 'button'
-init_voice_btn_input_element.value = '配信開始時ボイス'
-document.querySelector('#voice_area').appendChild(init_voice_btn_input_element);
-document.querySelector('#init_voice').addEventListener('click', initVoice);
-
-// 配信開始時のボイス
-function initVoice() {
-  console.log('initVoice')
-  // *********
-  // 配信開始時の設定情報
-  // *********
-  let uttr = new SpeechSynthesisUtterance()
-  uttr.text = '配信を開始しました。' + nowDateString + 'からの配信です。'
-  uttr.volume = 0.03 * mainVolumeInt * midnightVolumeInt
-  let isVoiced = false
-  speechSynthesis.addEventListener('voiceschanged', e => {
-    if(isVoiced) { return }
-    var voices = speechSynthesis.getVoices();
-    voices.forEach(function (v, i) {
-      if (v.name == 'Google 日本語') uttr.voice = v;
-      if (v.name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') uttr.voice = v;
-    });
-    // 発言を再生
-    console.log(uttr.text)
-    window.speechSynthesis.speak(uttr);
-    isVoiced = true
-  });
 }
 
 // 次の読み上げボタン設定
@@ -190,31 +157,9 @@ function nextVoice() {
   }
 }
 
-// BGMリセットボタン設定
-let bgm_reset_btn_input_element = document.createElement('input');
-bgm_reset_btn_input_element.id = 'bgm_reset'
-bgm_reset_btn_input_element.type = 'button'
-bgm_reset_btn_input_element.value = 'BGMリセット'
-document.querySelector('#voice_area').appendChild(bgm_reset_btn_input_element);
-document.querySelector('#bgm_reset').addEventListener('click', bgmReset);
-
-function bgmReset() {
-  bgm.pause();
-  bgm.play();
-  console.log('BGMリセット完了')
-}
-
 // *********
 // Utils関数
 // *********
-
-// JavaScriptの処理を指定ミリ秒中断させる
-function sleep(waitMsec) {
-  var startMsec = new Date();
-  // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
-  while (new Date() - startMsec < waitMsec);
-}
-
 // 読み上げ内容を連想配列に設定する
 function setVoice(isDefault, text, rate, voicevoxId = '') {
   isVoice = true
@@ -302,6 +247,14 @@ function mainProcess() {
 
   var element_live_name = document.querySelector('#room_info_inner p')
 
+  // 再生ボタンをクリックする
+  document.querySelector("#play_area img").click();
+  document.querySelector("#play_area img").click();
+  document.querySelector("#input_area input").value = '枠主';
+  document.querySelector("#comment_area textarea").value = '【初見歓迎】作業配信枠へようこそ！';
+  // TODO: 下記はテスト用コード。このコードを実行することによってコメントが送信される
+  document.querySelector("#comment_area input[type='submit']").click();
+
   // 発声練習
   let uttr = new SpeechSynthesisUtterance()
   uttr.text = ''
@@ -315,8 +268,8 @@ function mainProcess() {
     if (document.querySelector('.new_post').innerHTML == undefined) {
       return
     }
-    nonCommentCounter = 0
     let getText = document.querySelector('.column p').innerText
+    let getId = document.querySelector(".column input[type='hidden']").value
     // トリップ削除
     let text = getText.replace(/◆.*:/, ':')
     console.log('トリップ削除後:' + text)
@@ -329,9 +282,10 @@ function mainProcess() {
     // ログ用
     const date = new Date();
     const logDate = date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) + '.' + date.getMilliseconds();
+    const timeFromStart = document.querySelector('#timer p span').innerHTML
     console.log(element_live_name.innerText)
-    if (element_live_name.innerText.indexOf('あおにゃ') !== -1) {
-      sendJsonData(logDate, element_live_name.innerText, name, text)
+    if (element_live_name.innerText.indexOf('あおにゃ') !== -1 || element_live_name.innerText.indexOf('■') !== -1) {
+      sendJsonData(logDate, timeFromStart, element_live_name.innerText, name, text, getId)
     }
 
     // 「読み上げ再開」が含まれていた場合、再び読み上げられないようにする。
@@ -684,7 +638,7 @@ function mainProcess() {
         voiceInfo = "続いての曲は、今日一さん作、「月と猫」です。"
       } else if (nowDate.getHours() == 14) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/230_long_BPM166.mp3"
-        bgm.volume = 0.009 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.008 * mainVolumeInt * iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「キッズキッチンカー」です。"
       } else if (nowDate.getHours() == 15) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/237_long_BPM152.mp3"
@@ -827,7 +781,7 @@ function mainProcess() {
     引数：なし
     戻値：なし
 --------------------------------*/
-function sendJsonData(date, liveName, name, comment) {
+function sendJsonData(date, time, liveName, name, comment, id) {
   console.log("sendJson")
 	// 送信するJSON
 	let data =
@@ -835,10 +789,13 @@ function sendJsonData(date, liveName, name, comment) {
       "action": "insert",
       "sheetName": "DB",
       "rows": [
-        {"日時": date,
+        {
+        "日時": date,
+        "コメント時間": time,
         "枠名": liveName,
         "名前": name,
-        "コメント": comment}
+        "コメント": comment,
+        "ID": id}
       ]
     }
   console.log(JSON.stringify(data))

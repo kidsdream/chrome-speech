@@ -260,11 +260,16 @@ function mainProcess() {
   document.querySelector("#play_area img").click();
   document.querySelector("#play_area img").click();
   document.querySelector("#input_area input").value = '枠主';
-  window.commentArray.push('初見さん大歓迎です！気軽にコメントしてみてください😊');
+  // コメント欄が空の場合のみ
+  if (element && element.children.length == 0) {
+    window.commentArray.push('初見さん大歓迎です！気軽にコメントしてみてください😊');
+    window.commentArray.push('【説明】当配信のコメントは自動的に読み上げられます。自分の書いたコメントが読み上げられたくない場合「読み上げ不要」とコメントしてください。');
+  }
 
-  // コメント書き込み内容があるかどうか15秒ごとに監視
+  // コメント書き込み内容があるかどうか5秒ごとに監視
   setInterval(async () => {
     if (!isAonya) { return }
+    if (document.querySelector("#comment_area input[type='submit']").disabled) { return }
     // 配列にデータが存在する場合
     if (window.commentArray.length > 0) {
       document.querySelector("#comment_area textarea").value = window.commentArray[0];
@@ -273,7 +278,7 @@ function mainProcess() {
       // 書き込んだら配列の削除
       window.commentArray.shift()
     }
-  }, 15000); //15秒ごとに繰り返す
+  }, 5000); //5秒ごとに繰り返す
 
   // 発声練習
   let uttr = new SpeechSynthesisUtterance()
@@ -304,7 +309,7 @@ function mainProcess() {
     const logDate = date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) + '.' + date.getMilliseconds();
     const timeFromStart = document.querySelector('#timer p span').innerHTML
     console.log(element_live_name.innerText)
-    if (element_live_name.innerText.startsWith('あおにゃ') !== -1 || element_live_name.innerText.startsWith('■') !== -1) {
+    if (element_live_name.innerText.startsWith('あおにゃ') !== -1 || element_live_name.innerText.startsWith('■') !== -1 || name.indexOf('枠主') !== -1) {
       sendJsonData(logDate, timeFromStart, element_live_name.innerText, name, text, getId)
     }
 
@@ -317,7 +322,7 @@ function mainProcess() {
       console.log('読み上げ再開：' + name)
     }
     // 「読み上げ不要」が含まれていた場合読み上げられないようにする。
-    if (text.indexOf('読み上げ不要') !== -1 || text.indexOf('読上げ不要') !== -1 || text.indexOf('読上不要') !== -1 || element_live_name.innerText.startsWith('枠主') !== -1) {
+    if (text.indexOf('読み上げ不要') !== -1 || text.indexOf('読上げ不要') !== -1 || text.indexOf('読上不要') !== -1 || name.indexOf('枠主') !== -1) {
       // 読み上げ不要の人のUserIDを取得して登録する
       koeUserNameArray.push(name)
       console.log('読み上げ不要：' + name)
@@ -604,132 +609,108 @@ function mainProcess() {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M10_Harp_long_BPM95.mp3"
         bgm.volume = 0.035 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「いつかのカフェで – ハープver」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「いつかのカフェで – ハープver」です。');
       } else if (nowDate.getHours() == 1) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M16_Piano_long_BPM60.mp3"
         bgm.volume = 0.06 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「紫陽花の夢 – ピアノver」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「紫陽花の夢 – ピアノver」です。');
       } else if (nowDate.getHours() == 2) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M17_Harp_long_BPM100.mp3"
         bgm.volume = 0.06 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「雨上がりの林道 – ハープver」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「雨上がりの林道 – ハープver」です。');
       } else if (nowDate.getHours() == 3) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M14_Harp_long_BPM72.mp3"
         bgm.volume = 0.07 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「また、あした。 ハープバージョン」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「また、あした。 ハープバージョン」です。');
       } else if (nowDate.getHours() == 4) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M02_Harp_long_BPM80.mp3"
         bgm.volume = 0.016 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「いつかの夏休み – ハープver」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「いつかの夏休み – ハープver」です。');
       } else if (nowDate.getHours() == 5) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/351_long_BPM67.mp3"
         bgm.volume = 0.016 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「想ひ出語り」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「想ひ出語り」です。');
       } else if (nowDate.getHours() == 6) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/11/63_BPM66_LONG.mp3"
         bgm.volume = 0.016 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Lunar Eclipse – Technique」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「Lunar Eclipse – Technique」です。');
       } else if (nowDate.getHours() == 7) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/05/084_long_BPM80.mp3"
         bgm.volume = 0.012 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「おやすみをいうまえに」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「おやすみをいうまえに」です。');
       } else if (nowDate.getHours() == 8) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/209_long_BPM80.mp3"
         bgm.volume = 0.008 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「夕暮れコスモス」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「夕暮れコスモス」です。');
       } else if (nowDate.getHours() == 9) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/239_long_BPM88.mp3"
         bgm.volume = 0.006 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「夢うつつバイパス」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「夢うつつバイパス」です。');
       } else if (nowDate.getHours() == 10) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/355_long_BPM128.mp3"
         bgm.volume = 0.006 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「快晴都市」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「快晴都市」です。');
       } else if (nowDate.getHours() == 11) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/05/054_long_BPM128.mp3"
         bgm.volume = 0.014 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Hello World」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「Hello World」です。');
       } else if (nowDate.getHours() == 12) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/05/012_long_BPM117.mp3"
         bgm.volume = 0.015 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「スキップでいこう」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「スキップでいこう」です。');
       } else if (nowDate.getHours() == 13) {
         bgm.src = "https://storage.googleapis.com/koelive-project.appspot.com/%E6%9C%88%E3%81%A8%E7%8C%AB.mp3"
         bgm.volume = 0.016 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、今日一さん作、「月と猫」です。"
-        window.commentArray.push('続いての曲は、今日一さん作、「月と猫」です。');
       } else if (nowDate.getHours() == 14) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/230_long_BPM166.mp3"
         bgm.volume = 0.008 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「キッズキッチンカー」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「キッズキッチンカー」です。');
       } else if (nowDate.getHours() == 15) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/237_long_BPM152.mp3"
         bgm.volume = 0.01 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「夢見るターミナル」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「夢見るターミナル」です。');
       } else if (nowDate.getHours() == 16) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/280_long_BPM125.mp3"
         bgm.volume = 0.012 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「角砂糖をもうひとつ」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「角砂糖をもうひとつ」です。');
       } else if (nowDate.getHours() == 17) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/05/066_long_BPM66.mp3"
         bgm.volume = 0.014 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「淡々と流れていく時間」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「淡々と流れていく時間」です。');
       } else if (nowDate.getHours() == 18) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2024/02/LT107_BPM81_LONG.mp3"
         bgm.volume = 0.012 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Chill Zombie – Soothing Drops」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「Chill Zombie – Soothing Drops」です。');
       } else if (nowDate.getHours() == 19) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/11/46_BPM86_LONG.mp3"
         bgm.volume = 0.018 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Zodd – Youth movie」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「Zodd – Youth movie」です。');
       } else if (nowDate.getHours() == 20) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/11/11_BPM90_LONG.mp3"
         bgm.volume = 0.016 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Lunar Eclipse – Dreambox」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「Lunar Eclipse – Dreambox」です。');
       } else if (nowDate.getHours() == 21) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2024/02/LT126_BPM85_LONG.mp3"
         bgm.volume = 0.012 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Daryl Beat – Dimmed Serenity」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「Daryl Beat – Dimmed Serenity」です。');
       } else if (nowDate.getHours() == 22) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/11/58_BPM81_LONG.mp3"
         bgm.volume = 0.018 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Chilled Cow – 1989」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「Chilled Cow – 1989」です。');
       } else if (nowDate.getHours() == 23) {        bgm.src = "https://bgmer.net/wp-content/uploads/2024/02/LT107_BPM81_LONG.mp3"
         bgm.volume = 0.011 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Chill Zombie – Soothing Drops」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「Chill Zombie – Soothing Drops」です。');
       } else {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M19_MusicBox_long_BPM78-55.mp3"
         bgm.volume = 0.055 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「メリーゴーランド オルゴールバージョン」です。"
-        window.commentArray.push('続いての曲は、BGMerより、「メリーゴーランド オルゴールバージョン」です。');
       }
       bgm.loop = true
       bgm.play()
       isBGM = true
       if (isVoiceInfo) {
         userVoiceArray.push([true, voiceInfo, 1, ''])
+        window.commentArray.push(voiceInfo);
       }
       console.log('BGMの再生を開始')
     } else if (isBGMChange && !isEnd) {

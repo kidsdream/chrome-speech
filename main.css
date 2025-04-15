@@ -25,7 +25,7 @@ body {
 }
 
 /* 広告削除 */
-#ad_area {
+#ad_area, #manga_ad_area {
   display: none !important;
 }
 .sp_live_ad {

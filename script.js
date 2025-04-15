@@ -1,6 +1,10 @@
-import { alertmessage } from "./utils.js";
+import { sendJsonData } from "./utils/sendJsonData.js";
+import { playSePong } from "./utils/playSePong.js";
 "use strict"
 
+// *********
+// 初期設定
+// *********
 window.addEventListener("load", main, false);
 console.log("koe-koe読み上げ機能起動準備")
 var agent = window.navigator.userAgent.toLowerCase();
@@ -12,16 +16,21 @@ font_link_element.href = 'https://fonts.googleapis.com/css2?family=Kosugi+Maru&d
 font_link_element.rel = 'stylesheet'
 document.querySelector('head').appendChild(font_link_element);
 
-let koeUserNameArray = ['🐈‍⬛', 'キラ', 'きら'];
-let userVoiceArray = [];
-const bgm = new Audio();
+// 読み上げ不要ユーザー配列
+let koeUserNameArray = [];
 
-// 現在日時
+// 読み上げ文言の多重配列
+let userVoiceArray = [];
+
+// コメント管理配列
+let commentArray = [];
+
+const bgm = new Audio();
 const nowDate = new Date();
 
-// メイン音量
-let mainVolumeInt = 10
-let iOSMusicVolumeInt = 1
+// 音量設定
+window.mainVolumeInt = 10
+window.iOSMusicVolumeInt = 1
 let iOSVoiceVolumeInt = 1
 let midnightVolumeInt = 1
 // 深夜時間帯の音量縮小
@@ -30,11 +39,11 @@ if (nowDate.getHours() >= 0 && nowDate.getHours() <= 7) {
 }
 // Edgeからの場合はループバックさせるため音量を下げておく
 if (agent.indexOf('edg') > -1) {
-  mainVolumeInt = 0.9
+  window.mainVolumeInt = 0.9
 }
-// Edgeからの場合はループバックさせるため音量を下げておく
+// iOSからの場合はループバックさせるため音量を下げておく
 if (agent.indexOf('iphone') > -1 || agent.indexOf('macintosh') > -1) {
-  iOSMusicVolumeInt = 0.01
+  window.iOSMusicVolumeInt = 0.01
   iOSVoiceVolumeInt = 200
 }
 
@@ -144,7 +153,6 @@ document.querySelector('#voice_area').appendChild(next_voice_btn_input_element);
 document.querySelector('#next_voice').addEventListener('click', nextVoice);
 
 function nextVoice() {
-  // TODO: 次の読み上げ対象がない場合は非活性にしたい
   // Voice配列にデータが存在する場合
   if (userVoiceArray.length > 0) {
     const isDefault = userVoiceArray[0][0]
@@ -178,7 +186,7 @@ function defaultPlay(text, rate) {
     // 発言を設定
     const uttr = new SpeechSynthesisUtterance()
     uttr.text = text
-    uttr.volume = 0.025 * mainVolumeInt * iOSVoiceVolumeInt * midnightVolumeInt
+    uttr.volume = 0.025 * window.mainVolumeInt * iOSVoiceVolumeInt * midnightVolumeInt
     uttr.rate = rate
     let isVoiced = false
     console.log('Voice準備')
@@ -219,7 +227,7 @@ async function callVoicevoxApi(text, rate, voiceId) {
     if (jsonStatus.isAudioReady) {
       const music = new Audio()
       music.src = json.mp3DownloadUrl
-      music.volume = 0.05 * mainVolumeInt * midnightVolumeInt
+      music.volume = 0.05 * window.mainVolumeInt * midnightVolumeInt
       music.playbackRate = rate
       music.play()
       music.addEventListener("ended", (event) => {
@@ -247,13 +255,15 @@ function mainProcess() {
 
   var element_live_name = document.querySelector('#room_info_inner p')
 
-  // 再生ボタンをクリックする
+  // 再生ボタンをクリックする。※再生はしないので連続クリック
   document.querySelector("#play_area img").click();
   document.querySelector("#play_area img").click();
   document.querySelector("#input_area input").value = '枠主';
   document.querySelector("#comment_area textarea").value = '【初見歓迎】作業配信枠へようこそ！';
+  // TODO: コメントを投稿したい際は配列に入れ込むようにする
+  // TODO: タイマーを開始する。5秒間隔でコメント投稿を試みる
   // TODO: 下記はテスト用コード。このコードを実行することによってコメントが送信される
-  document.querySelector("#comment_area input[type='submit']").click();
+  // document.querySelector("#comment_area input[type='submit']").click();
 
   // 発声練習
   let uttr = new SpeechSynthesisUtterance()
@@ -319,7 +329,7 @@ function mainProcess() {
     if (isNotRead) {
       const music = new Audio();
       music.src = "https://soundeffect-lab.info/sound/button/mp3/cursor9.mp3"
-      music.volume = 0.07 * mainVolumeInt
+      music.volume = 0.07 * window.mainVolumeInt
       music.play();
       return
     }
@@ -553,7 +563,7 @@ function mainProcess() {
     } else if (star < document.querySelector('#room_prop .prop_block:last-of-type span').innerHTML) {
       const music = new Audio();
       music.src = "https://soundeffect-lab.info/sound/anime/mp3/pa1.mp3"
-      music.volume = 0.09 * mainVolumeInt * midnightVolumeInt
+      music.volume = 0.09 * window.mainVolumeInt * midnightVolumeInt
       music.play();
       console.log('いいねをいただきました。')
     }
@@ -582,102 +592,102 @@ function mainProcess() {
       let voiceInfo = ""
       if (nowDate.getHours() == 0) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M10_Harp_long_BPM95.mp3"
-        bgm.volume = 0.035 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.035 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「いつかのカフェで – ハープver」です。"
       } else if (nowDate.getHours() == 1) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M16_Piano_long_BPM60.mp3"
-        bgm.volume = 0.06 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.06 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「紫陽花の夢 – ピアノver」です。"
       } else if (nowDate.getHours() == 2) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M17_Harp_long_BPM100.mp3"
-        bgm.volume = 0.06 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.06 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「雨上がりの林道 – ハープver」です。"
       } else if (nowDate.getHours() == 3) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M14_Harp_long_BPM72.mp3"
-        bgm.volume = 0.07 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.07 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「また、あした。 ハープバージョン」です。"
       } else if (nowDate.getHours() == 4) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M02_Harp_long_BPM80.mp3"
-        bgm.volume = 0.016 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.016 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「いつかの夏休み – ハープver」です。"
       } else if (nowDate.getHours() == 5) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/351_long_BPM67.mp3"
-        bgm.volume = 0.016 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.016 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「想ひ出語り」です。"
       } else if (nowDate.getHours() == 6) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/11/63_BPM66_LONG.mp3"
-        bgm.volume = 0.016 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.016 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Lunar Eclipse – Technique」です。"
       } else if (nowDate.getHours() == 7) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/05/084_long_BPM80.mp3"
-        bgm.volume = 0.012 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.012 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「おやすみをいうまえに」です。"
       } else if (nowDate.getHours() == 8) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/12/209_long_BPM80.mp3"
-        bgm.volume = 0.008 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.008 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「夕暮れコスモス」です。"
       } else if (nowDate.getHours() == 9) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/239_long_BPM88.mp3"
-        bgm.volume = 0.006 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.006 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「夢うつつバイパス」です。"
       } else if (nowDate.getHours() == 10) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/355_long_BPM128.mp3"
-        bgm.volume = 0.006 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.006 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「快晴都市」です。"
       } else if (nowDate.getHours() == 11) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/05/054_long_BPM128.mp3"
-        bgm.volume = 0.014 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.014 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Hello World」です。"
       } else if (nowDate.getHours() == 12) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/05/012_long_BPM117.mp3"
-        bgm.volume = 0.015 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.015 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「スキップでいこう」です。"
       } else if (nowDate.getHours() == 13) {
         bgm.src = "https://storage.googleapis.com/koelive-project.appspot.com/%E6%9C%88%E3%81%A8%E7%8C%AB.mp3"
-        bgm.volume = 0.016 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.016 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、今日一さん作、「月と猫」です。"
       } else if (nowDate.getHours() == 14) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/230_long_BPM166.mp3"
-        bgm.volume = 0.008 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.008 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「キッズキッチンカー」です。"
       } else if (nowDate.getHours() == 15) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/237_long_BPM152.mp3"
-        bgm.volume = 0.01 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.01 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「夢見るターミナル」です。"
       } else if (nowDate.getHours() == 16) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/280_long_BPM125.mp3"
-        bgm.volume = 0.012 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.012 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「角砂糖をもうひとつ」です。"
       } else if (nowDate.getHours() == 17) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/05/066_long_BPM66.mp3"
-        bgm.volume = 0.014 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.014 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「淡々と流れていく時間」です。"
       } else if (nowDate.getHours() == 18) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2024/02/LT107_BPM81_LONG.mp3"
-        bgm.volume = 0.012 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.012 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Chill Zombie – Soothing Drops」です。"
       } else if (nowDate.getHours() == 19) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/11/46_BPM86_LONG.mp3"
-        bgm.volume = 0.018 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.018 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Zodd – Youth movie」です。"
       } else if (nowDate.getHours() == 20) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/11/11_BPM90_LONG.mp3"
-        bgm.volume = 0.016 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.016 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Lunar Eclipse – Dreambox」です。"
       } else if (nowDate.getHours() == 21) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2024/02/LT126_BPM85_LONG.mp3"
-        bgm.volume = 0.012 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.012 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Daryl Beat – Dimmed Serenity」です。"
       } else if (nowDate.getHours() == 22) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/11/58_BPM81_LONG.mp3"
-        bgm.volume = 0.018 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.018 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Chilled Cow – 1989」です。"
       } else if (nowDate.getHours() == 23) {        bgm.src = "https://bgmer.net/wp-content/uploads/2024/02/LT107_BPM81_LONG.mp3"
-        bgm.volume = 0.011 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.011 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Chill Zombie – Soothing Drops」です。"
       } else {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M19_MusicBox_long_BPM78-55.mp3"
-        bgm.volume = 0.055 * mainVolumeInt * iOSMusicVolumeInt
+        bgm.volume = 0.055 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「メリーゴーランド オルゴールバージョン」です。"
       }
       bgm.loop = true
@@ -720,7 +730,7 @@ function mainProcess() {
           // エンディングソング
           const music = new Audio();
           music.src = "https://bgmer.net/wp-content/uploads/2023/01/352_long_BPM81.mp3"
-          music.volume = 0.024 * mainVolumeInt * iOSMusicVolumeInt
+          music.volume = 0.024 * window.mainVolumeInt * window.iOSMusicVolumeInt
           music.loop = true
           music.play()
           isEnding = true
@@ -777,49 +787,12 @@ function mainProcess() {
 }
 
 /*-----------------------------
-    JSONデータを送信する
-    引数：なし
-    戻値：なし
---------------------------------*/
-function sendJsonData(date, time, liveName, name, comment, id) {
-  console.log("sendJson")
-	// 送信するJSON
-	let data =
-    {
-      "action": "insert",
-      "sheetName": "DB",
-      "rows": [
-        {
-        "日時": date,
-        "コメント時間": time,
-        "枠名": liveName,
-        "名前": name,
-        "コメント": comment,
-        "ID": id}
-      ]
-    }
-  console.log(JSON.stringify(data))
-	// Fetch APIでデータ送信
-	fetch('https://script.google.com/macros/s/AKfycbyAzUWj6faRyJHkONwohY6AtrHWWKNPwRzoMVYYbOsPfa8QTnOeRXPHYi86MTaKrkWmyQ/exec', {
-    method: 'post', // 通信メソッド
-    mode: 'no-cors',
-    headers: {
-      'Content-Type': 'application/json', // JSON形式のデータのヘッダー
-    },
-		body: JSON.stringify(data) // JSON形式のデータ
-	})
-	.then(response => response.text())
-	.then(data => {
-		console.log(data);
-	});
-}
-
-/*-----------------------------
     ポン出し機能
 --------------------------------*/
-let digitNum = 1
-const pongBtnName = document.querySelector('#comment_header_area input')
-pongBtnName.value = `NG初期化
+// ポン出し機能初期化処理
+window.digitNum = 1
+window.pongBtnName = document.querySelector('#comment_header_area input')
+window.pongBtnName.value = `NG初期化
 1.「よ、よろしくお願いします」
 2.「もう…だめ…」
 3.「よろしくお願いしますわ」
@@ -830,565 +803,7 @@ pongBtnName.value = `NG初期化
 8.ドドン
 9.チーン
 `
+// ポン出し押下時処理
 document.onkeydown = function (e) {
-  const se = new Audio();
-  if (e.code == "Digit1") {
-    pongBtnName.value = `NG初期化
-1.「よ、よろしくお願いします」
-2.「もう…だめ…」
-3.「よろしくお願いしますわ」
-4.「なんだザコかあ」
-5.「か、体がいうことを…」
-6.「やるじゃないか！」
-7.ドン
-8.ドドン
-9.チーン
-`
-    digitNum = 1
-  }
-  if (e.code == "Digit2") {
-    pongBtnName.value = `NG初期化
-1.歓声と拍手
-2.スタジアムの歓声
-3.黄色い悲鳴
-4.自主規制ピー音
-5.男衆「始めいッ！」
-6.爆発1
-7.キラッ1
-8.キラッ2
-9.ピューンと逃げる
-`
-    digitNum = 2
-  }
-  if (e.code == "Digit3") {
-    pongBtnName.value = `NG初期化
-1.間抜け1 ドジ
-2.間抜け3 えっ？
-3.間抜け5 気の抜ける音
-4.間抜け7 ほわんほわん
-5.お寺の鐘
-6.ショック2
-7.目が点になる
-8.ひらめく1
-9.ポカンとげんこつ
-`
-    digitNum = 3
-  }
-  if (e.code == "Digit4") {
-    pongBtnName.value = `NG初期化
-1.クイズ出題1
-2.クイズ正解2 鉄琴
-3.クイズ不正解1
-4.制限時間タイマー
-5.ちゃんちゃん♪1
-6.ちゃんちゃん♪2
-7.ちゃんちゃん♪3
-8.男衆「イヤッホー！」
-9.ドンドンパフパフ
-`
-    digitNum = 4
-  }
-  if (e.code == "Digit5") {
-    pongBtnName.value = `NG初期化
-1.「なんでやねん！」
-2.「ええかげんにせんかい！」
-3.「もうええわ」
-4.「おおきに」
-5.「アカン！」
-6.「もうかりまっか？」
-7.「えー…」
-8.「えーーーっ！？」
-9.「うぅっ…」
-`
-    digitNum = 5
-  }
-  if (e.code == "Digit6") {
-    pongBtnName.value = `NG初期化
-1.「ダメージ1 あぁん」
-2.「ダメージ2 だぁめ」
-3.「ダメージ3 らぁめ」
-4.「おいたはダメよ？」
-5.「怒っちゃうぞ」
-6.「キツイの行くわよ」
-7.「痛いかしら？」
-8.「あらあら2」
-9.「一緒にさぼろっか」
-`
-    digitNum = 6
-  }
-  if (e.code == "Digit7") {
-    pongBtnName.value = `NG初期化
-1.「ダメージ1 うっ」
-2.「ダメージ2 ひゃあ」
-3.「ダメージ3 いたい」
-4.「ダメージ4 はぁ」
-5.「ご褒美になでなでしてくれる？」
-6.「ちょっとヤバいかも」
-7.「ちょっとキツイや」
-8.「終わっちゃうの」
-9.「もう動けないや…」
-`
-    digitNum = 7
-  }
-  if (e.code == "Digit8") {
-    pongBtnName.value = `NG初期化
-1.「痛くはしませんわ」
-2.「美味しそう」
-3.「吸血1 ジュルュジュ」
-4.「吸血2 チュル」
-5.「吸血3 ッハァ」
-6.「君は生ゴミみたいな匂いがするにゃぁ」
-7.「生ごみにゃ！生ごみにゃ！」
-8.「へぇ」
-9.「はいはい、どーもにゃ」
-`
-    digitNum = 8
-  }
-  if (e.code == "Digit9") {
-    pongBtnName.value = `NG初期化
-1.「絶対泣かせちゃうもんね！」
-2.「こんなの聞いてないよ！？」
-3.「なめんなよ！」
-4.「べ～だ！」
-5.「タンマ！」
-6.「うわああ！」
-7.「うわーーーー！」
-8.「ちくしょー、覚えてろよぉ！」
-9.「へへん、どうだ！」
-`
-    digitNum = 9
-  }
-  if (digitNum == 1) {
-    // テンキー1
-    console.log(e.code)
-    if (e.code == "Numpad1") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/healer-greeting1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー2
-    if (e.code == "Numpad2") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/healer-death1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー3
-    if (e.code == "Numpad3") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/witch-greeting1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー4
-    if (e.code == "Numpad4") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-start1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー5
-    if (e.code == "Numpad5") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/wizard-faint1.mp3"
-      se.volume = 0.04 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー6
-    if (e.code == "Numpad6") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/swordman-guard2.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー7
-    if (e.code == "Numpad7") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/drum-japanese1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー8
-    if (e.code == "Numpad8") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/drum-japanese2.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー9
-    if (e.code == "Numpad9") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/tin1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-  }
-  if (digitNum == 2) {
-    // テンキー1
-    console.log(e.code)
-    if (e.code == "Numpad1") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/people/people-performance-cheer1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー2
-    if (e.code == "Numpad2") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/people/people-stadium-cheer1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー3
-    if (e.code == "Numpad3") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/people/people-studio-kyaa1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー4
-    if (e.code == "Numpad4") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/self-regulation1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー5
-    if (e.code == "Numpad5") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/mens-hajimei1.mp3"
-      se.volume = 0.04 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー6
-    if (e.code == "Numpad6") {
-      se.src = "https://soundeffect-lab.info/sound/battle/mp3/bomb1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー7
-    if (e.code == "Numpad7") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/kira1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー8
-    if (e.code == "Numpad8") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/kira2.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー9
-    if (e.code == "Numpad9") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/flee1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-  }
-  if (digitNum == 3) {
-    // テンキー1
-    console.log(e.code)
-    if (e.code == "Numpad1") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/stupid1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー2
-    if (e.code == "Numpad2") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/stupid3.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー3
-    if (e.code == "Numpad3") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/stupid5.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー4
-    if (e.code == "Numpad4") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/stupid7.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー5
-    if (e.code == "Numpad5") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/temple-bell1.mp3"
-      se.volume = 0.04 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー6
-    if (e.code == "Numpad6") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/shock2.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー7
-    if (e.code == "Numpad7") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/stunned1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー8
-    if (e.code == "Numpad8") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/flash1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー9
-    if (e.code == "Numpad9") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/strike1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-  }
-  if (digitNum == 4) {
-    // テンキー1
-    console.log(e.code)
-    if (e.code == "Numpad1") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/question1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー2
-    if (e.code == "Numpad2") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/correct2.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー3
-    if (e.code == "Numpad3") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/incorrect1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー4
-    if (e.code == "Numpad4") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/quiz-timer1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー5
-    if (e.code == "Numpad5") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/chan-chan1.mp3"
-      se.volume = 0.04 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー6
-    if (e.code == "Numpad6") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/chan-chan2.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー7
-    if (e.code == "Numpad7") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/chan-chan3.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー8
-    if (e.code == "Numpad8") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/mens-yahoo1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー9
-    if (e.code == "Numpad9") {
-      se.src = "https://soundeffect-lab.info/sound/anime/mp3/dondonpafupafu1.mp3"
-      se.volume = 0.03 * mainVolumeInt * iOSMusicVolumeInt
-    }
-  }
-  if (digitNum == 5) {
-    // テンキー1
-    console.log(e.code)
-    if (e.code == "Numpad1") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-nandeyanen1.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー267
-    if (e.code == "Numpad2") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-eekagennnisenkai1.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー3
-    if (e.code == "Numpad3") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-moueewa1.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー4
-    if (e.code == "Numpad4") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-ookini1.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー5
-    if (e.code == "Numpad5") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-akan1.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー6
-    if (e.code == "Numpad6") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-moukarimakka1.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー7
-    if (e.code == "Numpad7") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-ee2.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー8
-    if (e.code == "Numpad8") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-ee1.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー9
-    if (e.code == "Numpad9") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/line-girl1/line-girl1-uu1.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-  }
-  if (digitNum == 6) {
-    // テンキー1
-    console.log(e.code)
-    if (e.code == "Numpad1") {
-      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-damegi1.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー2
-    if (e.code == "Numpad2") {
-      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-damegi2.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー3
-    if (e.code == "Numpad3") {
-      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-damegi3.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー4
-    if (e.code == "Numpad4") {
-      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-oitahadameyo.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー5
-    if (e.code == "Numpad5") {
-      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-okocchauzo.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー6
-    if (e.code == "Numpad6") {
-      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-kituinoikuwayo.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー7
-    if (e.code == "Numpad7") {
-      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-itaikashira.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー8
-    if (e.code == "Numpad8") {
-      se.src = "https://blog-imgs-116.fc2.com/s/p/a/spaluna/zyosei2-araara2.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー9
-    if (e.code == "Numpad9") {
-      se.src = "https://blog-imgs-118.fc2.com/s/p/a/spaluna/zyosei2-issyonisaborokka.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-  }
-  if (digitNum == 7) {
-    // テンキー1
-    console.log(e.code)
-    if (e.code == "Numpad1") {
-      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-damege1.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー2
-    if (e.code == "Numpad2") {
-      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-damege2.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー3
-    if (e.code == "Numpad3") {
-      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-damege3.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー4
-    if (e.code == "Numpad4") {
-      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-damege4.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー5
-    if (e.code == "Numpad5") {
-      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-gohoubininadenade.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー6
-    if (e.code == "Numpad6") {
-      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-tyottoyabaikaom.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー7
-    if (e.code == "Numpad7") {
-      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-tyottokituiya.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー8
-    if (e.code == "Numpad8") {
-      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-owattyauno.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー9
-    if (e.code == "Numpad9") {
-      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo8-mouugokenaiya.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-  }
-  if (digitNum == 8) {
-    // テンキー1
-    console.log(e.code)
-    if (e.code == "Numpad1") {
-      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-itakuhasimasennwa.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー2
-    if (e.code == "Numpad2") {
-      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-oisiso.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー3
-    if (e.code == "Numpad3") {
-      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-kyuuketu.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー4
-    if (e.code == "Numpad4") {
-      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-kyuuketu2.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー5
-    if (e.code == "Numpad5") {
-      se.src = "https://blog-imgs-117.fc2.com/s/p/a/spaluna/syozyo11-kyuuketu3.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー6
-    if (e.code == "Numpad6") {
-      se.src = "https://blog-imgs-119.fc2.com/s/p/a/spaluna/syozyo13-kimihanamagomimitaina.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー7
-    if (e.code == "Numpad7") {
-      se.src = "https://blog-imgs-119.fc2.com/s/p/a/spaluna/syozyo13-namagominya.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー8
-    if (e.code == "Numpad8") {
-      se.src = "https://blog-imgs-119.fc2.com/s/p/a/spaluna/syozyo13-he-.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー9
-    if (e.code == "Numpad9") {
-      se.src = "https://blog-imgs-119.fc2.com/s/p/a/spaluna/syozyo13-haihaidomonya.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-  }
-  if (digitNum == 9) {
-    // テンキー1
-    console.log(e.code)
-    if (e.code == "Numpad1") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-special2.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー2
-    if (e.code == "Numpad2") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-start2.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー3
-    if (e.code == "Numpad3") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-attack3.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー4
-    if (e.code == "Numpad4") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-guard1.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー5
-    if (e.code == "Numpad5") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-guard2.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー6
-    if (e.code == "Numpad6") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-damage2.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー7
-    if (e.code == "Numpad7") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-death1.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー8
-    if (e.code == "Numpad8") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-lose1.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-    // テンキー9
-    if (e.code == "Numpad9") {
-      se.src = "https://soundeffect-lab.info/sound/voice/mp3/game/thief-boy-win1.mp3"
-      se.volume = 0.12 * mainVolumeInt * iOSMusicVolumeInt
-    }
-  }
-  se.play()
+  playSePong(e)
 };

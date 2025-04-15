@@ -25,7 +25,8 @@
     {
         "resources": [
             "script.js",
-            "utils.js"
+            "utils/playSePong.js",
+            "utils/sendJsonData.js"
         ],
         "matches": ["<all_urls>"]
     }

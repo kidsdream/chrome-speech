@@ -18,12 +18,12 @@ document.querySelector('head').appendChild(font_link_element);
 
 // 読み上げ不要ユーザー配列
 let koeUserNameArray = [];
-
 // 読み上げ文言の多重配列
 let userVoiceArray = [];
-
 // コメント管理配列
 window.commentArray = [];
+// じゃんけんユーザー名
+let buttleUserName = '';
 
 const bgm = new Audio();
 const nowDate = new Date();
@@ -210,6 +210,86 @@ function defaultPlay(text, rate) {
   }
 }
 
+// じゃんけんの文字列正規化関数
+function normalizeInput(input) {
+  // 小文字に変換して、全角文字を半角に変換
+  let normalized = input.toLowerCase().replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+    return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+  });
+  // ひらがな・カタカナを統一
+  // ここではカタカナに統一する
+  normalized = normalized.replace(/[\u3041-\u3096]/g, function(s) {
+    return String.fromCharCode(s.charCodeAt(0) + 0x60);
+  });
+  // 絵文字や複数の表記パターンを特定の文字列に置き換える
+  if (normalized.includes("✊") || normalized.includes("👊") || normalized.includes("ぐー") || normalized.includes("グー")) {
+    return "グー";
+  } else if (normalized.includes("✌") || normalized.includes("✌️") || normalized.includes("ちょき") || normalized.includes("チョキ")) {
+    return "チョキ";
+  } else if (normalized.includes("✋") || normalized.includes("🖐️") || normalized.includes("ぱー") || normalized.includes("パー")) {
+    return "パー";
+  } else {
+    return normalized;
+  }
+}
+
+// 日付と名前からシード値を生成する関数
+function generateSeed(dateString, name) {
+  let seed = 0;
+  const key = dateString + name;
+  for (let i = 0; i < key.length; i++) {
+    seed += key.charCodeAt(i);
+  }
+  return seed;
+}
+
+// シード値を使った擬似乱数生成器
+function seededRandom(seed) {
+  const a = 1103515245;
+  const c = 12345;
+  const m = 2147483648; // 2^31
+  return function() {
+    seed = (a * seed + c) % m;
+    return seed / m;
+  };
+}
+
+// 占いロジック
+function getFortune(name) {
+  // 今日の日付を取得（'YYYY-MM-DD'形式）
+  const today = new Date();
+  const dateString = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+
+  // 日付と名前からシード値を生成
+  const seed = generateSeed(dateString, name);
+  // シード値を使って乱数生成関数を作る
+  const random = seededRandom(seed);
+
+  const fortunes = [
+    "大吉", "中吉", "小吉", "吉", "末吉", "半吉", "末小吉", "凶", "半凶", "末凶", "大凶"
+  ];
+
+  const colors = [
+    "赤", "青", "黄", "緑", "紫", "白", "黒", "茶色", "金色", "銀色", "橙色", "桃色", "水色", "灰色", "紺色", "クリーム色", "深緑", "茜色"
+  ];
+
+  const items = [
+    "鍵", "ハンカチ", "本", "腕時計", "スマートフォン", "財布", "靴", "ペン", "ノート", "眼鏡", "イヤホン", "傘", "手帳", "マグカップ", "万年筆", "名刺入れ", "リップクリーム", "ヘアゴム"
+  ];
+
+  // 配列の要素数を使って乱数を生成
+  const fortuneNumber = Math.floor(random() * fortunes.length);
+  const colorNumber = Math.floor(random() * colors.length);
+  const itemNumber = Math.floor(random() * items.length);
+
+  return {
+    name: name,
+    fortune: fortunes[fortuneNumber],
+    luckyColor: colors[colorNumber],
+    luckyItem: items[itemNumber]
+  };
+}
+
 let isVoice = false
 // VOICEVOXを使用して読み上げさせる
 async function callVoicevoxApi(text, rate, voiceId) {
@@ -262,8 +342,9 @@ function mainProcess() {
   document.querySelector("#input_area input").value = '枠主';
   // コメント欄が空の場合のみ
   if (element && element.children.length == 0) {
-    window.commentArray.push('初見さん大歓迎です！気軽にコメントしてみてください😊');
-    window.commentArray.push('【説明】当配信のコメントは自動的に読み上げられます。自分の書いたコメントが読み上げられたくない場合「読み上げ不要」とコメントしてください。');
+    // 枠開始時コメント
+    // window.commentArray.push('初見さん大歓迎です！気軽にコメントしてみてください😊');
+    // window.commentArray.push('【説明】当配信のコメントは自動的に読み上げられます。自分の書いたコメントが読み上げられたくない場合「読み上げ不要」とコメントしてください。');
   }
 
   // コメント書き込み内容があるかどうか5秒ごとに監視
@@ -311,6 +392,49 @@ function mainProcess() {
     console.log(element_live_name.innerText)
     if (element_live_name.innerText.startsWith('あおにゃ') !== -1 || element_live_name.innerText.startsWith('■') !== -1 || name.indexOf('枠主') !== -1) {
       sendJsonData(logDate, timeFromStart, element_live_name.innerText, name, text, getId)
+    }
+
+    //
+    // じゃんけん機能
+    //
+    // じゃんけん回答
+    if (name == buttleUserName) {
+      // コンピューターの手をランダムに決定
+      const hands = ["グー", "チョキ", "パー"];
+      const computerHand = hands[Math.floor(Math.random() * hands.length)];
+
+      const playerHand = normalizeInput(text);
+      if (playerHand != "グー" && playerHand != "チョキ" && playerHand != "パー") { return; }
+      window.commentArray.push(`${name}さん「${playerHand}」 あおにゃ「${computerHand}」`);
+
+      // 勝敗を判定
+      if (playerHand === computerHand) {
+        window.commentArray.push(`あいこだ！あいこでしょっ！`);
+      } else if (
+        (playerHand === "グー" && computerHand === "チョキ") ||
+        (playerHand === "チョキ" && computerHand === "パー") ||
+        (playerHand === "パー" && computerHand === "グー")
+      ) {
+        window.commentArray.push(`${name}さんの勝ち！強いねぇ！！`);
+        buttleUserName = '';
+      } else {
+        window.commentArray.push(`あおにゃの勝ちー！！いぇーい！！`);
+        buttleUserName = '';
+      }
+    }
+    // じゃんけん
+    if (text.indexOf('じゃんけん') !== -1 && name !== '枠主') {
+      window.commentArray.push(`${name}さん、あおにゃと遊ぼう！最初はグー！じゃーんけんっポン！`);
+      buttleUserName = name;
+    }
+
+    //
+    // 占い
+    //
+    if (text.indexOf('占い') !== -1 && name !== '枠主') {
+      const result = getFortune(name);
+      window.commentArray.push(`${name}さんの今日の運勢は「${result.fortune}」です！ラッキーカラーは「${result.luckyColor}」ラッキーアイテムは「${result.luckyItem}」です。`);
+      console.log(`${name}さんの今日の運勢は「${result.fortune}」です！ラッキーカラーは「${result.luckyColor}」ラッキーアイテムは「${result.luckyItem}」です。`);
     }
 
     // 「読み上げ再開」が含まれていた場合、再び読み上げられないようにする。
@@ -662,17 +786,18 @@ function mainProcess() {
         bgm.volume = 0.016 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、今日一さん作、「月と猫」です。"
       } else if (nowDate.getHours() == 14) {
-        bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/230_long_BPM166.mp3"
-        bgm.volume = 0.008 * window.mainVolumeInt * window.iOSMusicVolumeInt
-        voiceInfo = "続いての曲は、ビージーエマーより、「キッズキッチンカー」です。"
-      } else if (nowDate.getHours() == 15) {
-        bgm.src = "https://bgmer.net/wp-content/uploads/2022/03/237_long_BPM152.mp3"
-        bgm.volume = 0.01 * window.mainVolumeInt * window.iOSMusicVolumeInt
-        voiceInfo = "続いての曲は、ビージーエマーより、「夢見るターミナル」です。"
+        bgm.src = "https://storage.googleapis.com/koelive-project.appspot.com/Little%20More.mp3"
+        bgm.volume = 0.02 * window.mainVolumeInt * window.iOSMusicVolumeInt
+        voiceInfo = "続いての曲は、伊東 隆作曲フリーBGM、「Little More」です。"
+      }
+      else if (nowDate.getHours() == 15) {
+        bgm.src = "https://storage.googleapis.com/koelive-project.appspot.com/Holiday.mp3"
+        bgm.volume = 0.02 * window.mainVolumeInt * window.iOSMusicVolumeInt
+        voiceInfo = "続いての曲は、伊東 隆作曲フリーBGM、「Holiday」です。"
       } else if (nowDate.getHours() == 16) {
-        bgm.src = "https://bgmer.net/wp-content/uploads/2022/05/280_long_BPM125.mp3"
-        bgm.volume = 0.012 * window.mainVolumeInt * window.iOSMusicVolumeInt
-        voiceInfo = "続いての曲は、ビージーエマーより、「角砂糖をもうひとつ」です。"
+        bgm.src = "https://storage.googleapis.com/koelive-project.appspot.com/Pages.mp3"
+        bgm.volume = 0.022 * window.mainVolumeInt * window.iOSMusicVolumeInt
+        voiceInfo = "続いての曲は、伊東 隆作曲フリーBGM、「Pages」です。"
       } else if (nowDate.getHours() == 17) {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/05/066_long_BPM66.mp3"
         bgm.volume = 0.014 * window.mainVolumeInt * window.iOSMusicVolumeInt
@@ -697,9 +822,10 @@ function mainProcess() {
         bgm.src = "https://bgmer.net/wp-content/uploads/2021/11/58_BPM81_LONG.mp3"
         bgm.volume = 0.018 * window.mainVolumeInt * window.iOSMusicVolumeInt
         voiceInfo = "続いての曲は、ビージーエマーより、「Chilled Cow – 1989」です。"
-      } else if (nowDate.getHours() == 23) {        bgm.src = "https://bgmer.net/wp-content/uploads/2024/02/LT107_BPM81_LONG.mp3"
+      } else if (nowDate.getHours() == 23) {
+        bgm.src = "https://storage.googleapis.com/koelive-project.appspot.com/Nothing.mp3"
         bgm.volume = 0.011 * window.mainVolumeInt * window.iOSMusicVolumeInt
-        voiceInfo = "続いての曲は、ビージーエマーより、「Chill Zombie – Soothing Drops」です。"
+        voiceInfo = "続いての曲は、伊東 隆作曲フリーBGM、「Nothing」です。"
       } else {
         bgm.src = "https://bgmer.net/wp-content/uploads/2023/01/M19_MusicBox_long_BPM78-55.mp3"
         bgm.volume = 0.055 * window.mainVolumeInt * window.iOSMusicVolumeInt
